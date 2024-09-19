@@ -136,11 +136,12 @@ export default function Lab1() {
     <img id="wd-starship"
     width="400px"
     src="https://images.squarespace-cdn.com/content/v1/6058f3b0dbb27b03bbd36be9/1616442358480-QB4FPW98SIE28C82E87X/interstellar_ron_burnett_critical_approaches?format=1500w"
+    alt=""
     />
     <br />
     Loading a local image:
     <br />
-    <img id="wd-teslabot" src="images/teslabot.jpg" height="200px" />
+    <img id="wd-teslabot" src="images/teslabot.jpg" height="200px" alt=""/>
     </div>
     <div id="wd-forms">
     <h4>Form Elements</h4>
