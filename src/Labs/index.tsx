@@ -7,6 +7,7 @@ export default function Labs() {
 return (
 <div>
 <h1>Labs</h1>
+<h2>https://github.com/DucianX/kanbas-react-web-app-cd5610-fa24</h2>
 <TOC />
 <Routes>
 <Route path="/" element={<Navigate to="Lab1" />} />
