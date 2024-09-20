@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 export default function CoursesNavigation() {
   return (
     <div id="wd-courses-navigation">
-      <Link id="wd-course-home-link"    to="/Kanbas/Courses/1234/Home">Home</Link><br/>
+      <Link id="wd-course-home-link"    to="/Kanbas/Courses/1234/Home" rel="noreferrer">Home</Link><br/>
       <Link id="wd-course-modules-link" to="/Kanbas/Courses/1234/Modules">Modules
         </Link><br/>
       <Link id="wd-course-piazza-link"  to="/Kanbas/Courses/1234/Piazza">Piazza</Link><br/>

@@ -3,7 +3,6 @@ import Account from "./Account";
 import Dashboard from "./Dashboard";
 import KanbasNavigation from "./Navigation";
 import Courses from "./Courses";
-import Assignments from "./Courses/Assignments";
 
 
 export default function Kanbas() {
