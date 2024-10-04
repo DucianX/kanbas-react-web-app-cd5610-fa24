@@ -1,12 +1,9 @@
 import { AiOutlineDashboard } from "react-icons/ai";
-import { IoCalendarOutline } from "react-icons/io5";
-import { LiaBookSolid, LiaCogSolid } from "react-icons/lia";
-import { FaInbox, FaRegCircleUser } from "react-icons/fa6";
+import { LiaBookSolid } from "react-icons/lia";
+import { FaRegCircleUser } from "react-icons/fa6";
 import { Link } from "react-router-dom";
-import { MdGroups, MdHistory } from "react-icons/md";
-import { CiCalendarDate, CiCircleQuestion } from "react-icons/ci";
+import { CiCalendarDate } from "react-icons/ci";
 import { CiInboxIn } from "react-icons/ci";
-import { CiClock1 } from "react-icons/ci";
 import { CiBezier } from "react-icons/ci";
 
 export default function KanbasNavigation() {
@@ -14,7 +11,7 @@ export default function KanbasNavigation() {
     <div id="wd-kanbas-navigation" style={{ width: 110 }} 
          className="list-group rounded-0 position-fixed
          bottom-0 top-0 d-none d-md-block bg-black z-2">
-      <a id="wd-neu-link" target="_blank" 
+      <a id="wd-neu-link"  
         href="https://www.northeastern.edu/"
         className="list-group-item bg-black border-0 text-center">
         <img src="/images/NEU.png" width="75px" /></a>
