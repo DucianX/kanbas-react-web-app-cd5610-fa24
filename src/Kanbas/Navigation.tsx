@@ -45,7 +45,7 @@ export default function KanbasNavigation() {
       <CiInboxIn className="fs-1 text-danger" /><br />
       Inbox </Link>
 
-      <Link to="/Kanbas/Dashboard" id="wd-labs-link"
+      <Link to="/Labs" id="wd-labs-link"
       className="list-group-item text-white
                   bg-black text-center border-0">
       <CiBezier className="fs-1 text-danger" /><br />
