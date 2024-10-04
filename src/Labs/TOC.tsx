@@ -7,6 +7,9 @@ export default function TOC() {
         <a id="wd-a" href="#/Labs" className="nav-link">
           Labs
         </a>
+        <a id="wd-github" href="#/Labs" className="nav-link">
+        https://github.com/DucianX/kanbas-react-web-app-cd5610-fa24
+        </a>
       </li>
       <li className="nav-item">
         <a id="wd-a1" href="#/Labs/Lab1"
