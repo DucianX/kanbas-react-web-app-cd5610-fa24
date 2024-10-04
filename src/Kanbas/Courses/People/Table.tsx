@@ -1,6 +1,7 @@
 import { FaUserCircle } from "react-icons/fa";
 export default function PeopleTable() {
   return (
+    
     <div id="wd-people-table">
       <table className="table table-striped">
         <thead>
@@ -49,6 +50,7 @@ export default function PeopleTable() {
           {/* Add at least 3 more users such as Bruce Wayne, Steve Rogers, and Natasha Romanoff */}
         </tbody>
       </table>
-    </div> );}
+    </div> 
+    );}
 
 
