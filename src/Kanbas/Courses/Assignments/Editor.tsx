@@ -49,7 +49,7 @@ export default function AssignmentEditor() {
           
         <div className="row mb-3">
           <div className="col-12 text-end">
-              <label htmlFor="wd-group">Assignment Group</label>
+              <label htmlFor="wd-group" className = "me-2">Assignment Group</label>
               <select id="wd-group" className="form-control d-inline-block w-50" defaultValue="ASSIGNMENTS">
               <option value="ASSIGNMENTS" className="form-control d-inline-block w-50">ASSIGNMENTS</option>
               </select>
@@ -59,124 +59,89 @@ export default function AssignmentEditor() {
 
         <div className="row mb-3">
         <div className="col-12 text-end">
-           <label htmlFor="wd-display-grade-as">Display Grade as</label>
+           <label htmlFor="wd-display-grade-as" className = "me-2">Display Grade as</label>
             <select id="wd-display-grade-as" className="form-control d-inline-block w-50" defaultValue="Percentage">
                 <option value="Percentage">Percentage</option>
               </select>
               </div>
               </div>
+    
+              <div className="row mb-3">
+                <div className="col-md-3 d-flex align-items-center">
+                  <label htmlFor="submission-type" className="form-label mb-0">Submission Type</label>
+                </div>
 
-        <div className="row mb-3">
-        <div className="col-12 text-end">
-            <label htmlFor="wd-submission-type">Submission Type</label>
-            <select id="wd-submission-type" className="form-control d-inline-block w-50" defaultValue="Online">
-                <option value="Online">Online</option>
-              </select>
+                <div className="col-md-9">
+                  <div className="p-3 border rounded"> {/* container on the right */}
+                    <select id="submission-type" className="form-control mb-3">
+                      <option value="Online">Online</option>
+                    </select>
+
+                    <label htmlFor="online-entry-options" className="form-label">Online Entry Options</label>
+                    <div className="form-check">
+                      <input className="form-check-input" type="checkbox" id="text-entry" />
+                      <label className="form-check-label" htmlFor="text-entry">Text Entry</label>
+                    </div>
+                    <div className="form-check">
+                      <input className="form-check-input" type="checkbox" id="website-url" checked />
+                      <label className="form-check-label" htmlFor="website-url">Website URL</label>
+                    </div>
+                    <div className="form-check">
+                      <input className="form-check-input" type="checkbox" id="media-recordings" />
+                      <label className="form-check-label" htmlFor="media-recordings">Media Recordings</label>
+                    </div>
+                    <div className="form-check">
+                      <input className="form-check-input" type="checkbox" id="student-annotation" />
+                      <label className="form-check-label" htmlFor="student-annotation">Student Annotation</label>
+                    </div>
+                    <div className="form-check">
+                      <input className="form-check-input" type="checkbox" id="file-uploads" />
+                      <label className="form-check-label" htmlFor="file-uploads">File Uploads</label>
+                    </div>
+                  </div>
+                </div>
               </div>
+
+           
+
+              <div className="container">
+              {/* Assign Section */}
+              <div className="row mb-3">
+                <label className="col-sm-2 col-form-label ">Assign</label>
+                <div className="col-sm-10">
+                  <div className="card p-3">
+                    <div className="form-group">
+                      <label>Assign to</label>
+                      <input className="form-control" value="Everyone" />
+                    </div>
+                    <div className="form-group mt-3">
+                      <label>Due</label>
+                      <input className="form-control" type="date" value="2024-05-13" />
+                    </div>
+                    <div className="form-group mt-3">
+                      <label>Available from</label>
+                      <input className="form-control" type="date" value="2024-05-06" />
+                    </div>
+                    <div className="form-group mt-3">
+                      <label>Until</label>
+                      <input className="form-control" type="date" value="2024-05-20" />
+                    </div>
+                  </div>
+                </div>
               </div>
-        
+              <hr className="my-custom-line"></hr>
+              {/* Cancel and Save Buttons */}
+              <div className="row">
+                <div className="col-sm-10 offset-sm-2">
+                  <div className="d-flex justify-content-end">
+                    <button className="btn btn-secondary me-2">Cancel</button>
+                    <button className="btn btn-danger">Save</button>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-          <tr>
-            <td align="right" valign="top">
-              <label htmlFor="wd-text-entry"></label>
-            </td>
-            <td>
-              <label htmlFor="wd-submission-type">Online Entry Options</label><br></br>
-
-              <input type="checkbox" name="entry-options" id="wd-text-entry"/>
-              <label htmlFor="wd-text-entry">Text Entry</label><br/>
-
-              <input type="checkbox" name="entry-options" id="wd-website-url"/>
-              <label htmlFor="wd-website-url">Website URL</label><br/>
-
-              <input type="checkbox" name="entry-options" id="wd-media-recordings"/>
-              <label htmlFor="wd-media-recordings">Media Recordings</label><br/>
-
-              <input type="checkbox" name="entry-options" id="wd-student-annotation"/>
-              <label htmlFor="wd-student-annotation">Student Annotation</label><br/>
-
-              <input type="checkbox" name="entry-options" id="wd-file-upload"/>
-              <label htmlFor="wd-file-upload">File Uploads</label><br/>
-            </td>
-            <br></br>
-          </tr>
-          <br></br>
-
-          <tr>
-            <td align="right" valign="top">
-              <label htmlFor="wd-assign-to">Assign</label>
-            </td>
-            <td>
-             <label htmlFor="wd-assign-to">Assign to</label>
-            </td>
-          </tr>
-        
-          <tr>
-            <td align="right" valign="top">
-              <label htmlFor="wd-assign-to"></label>
-            </td>
-            <td>
-            <input id="wd-assign-to" defaultValue="Everyone">
-              </input>
-            </td>
-          </tr>
-          <br></br>
-          
-          <tr>
-            <td align="right" valign="top">
-              <label htmlFor="wd-due-date"></label>
-            </td>
-            <td>
-              <label htmlFor="wd-due-date">Due</label>
-            </td>
-          </tr>
-
-          <tr>
-            <td></td>
-            <td>
-            <input id="wd-due-date" value="2024-05-13" type="date">
-            </input>
-            </td>
-          </tr>
-          <br></br>
-
-          <tr>
-            <td align="right" valign="top">
-              <label htmlFor="wd-available-from"></label>
-            </td>
-            <td>
-              <label htmlFor="wd-available-from">Available from</label>
-            </td>
-            <td>
-                <label htmlFor="wd-available-until">Until</label>
-            </td>
-          </tr>
-
-          <tr>
-            <td></td>
-            <td>
-                <input id="wd-available-from" value="2024-05-06" type="date">
-                </input>
-            </td>
-            <td>
-                <input id="wd-available-until" value="2024-05-20" type="date">
-                </input>
-            </td>
-          </tr>
-          <tr>
-            <td colSpan={3}>
-                <hr></hr>
-            </td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            
-            <td align="right">
-              <button type="button">Cancel</button>
-              <button type="submit">Save</button>
-            </td>
-          </tr>
+   
           
           
      
