@@ -2,12 +2,11 @@ import { MdDoNotDisturbAlt } from "react-icons/md";
 import { FaCheckCircle } from "react-icons/fa";
 import { BiImport } from "react-icons/bi";
 import { LiaFileImportSolid } from "react-icons/lia";
-import { CiBellOn, CiHome } from "react-icons/ci";
+import { CiBellOn } from "react-icons/ci";
 import { IoIosStats } from "react-icons/io";
 import { HiOutlineSpeakerphone } from "react-icons/hi";
 import { GiChemicalDrop } from "react-icons/gi";
 import { IoHomeOutline } from "react-icons/io5";
-{/* Find more icons */}
 export default function CourseStatus() {
   return (
     <div id="wd-course-status" className="ms-4" style={{ width: "300px" }}>
