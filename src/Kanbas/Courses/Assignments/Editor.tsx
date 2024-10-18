@@ -1,11 +1,18 @@
+import { useParams, Link } from "react-router-dom";
+import assignments from "../../Database/assignments.json";
+
 export default function AssignmentEditor() {
-    return (
+  const { cid, aid } = useParams();
+  // 按照当前cid aid进行过滤
+  const assignment = assignments.find((assignment: { _id: string ; course: string ; }) => assignment._id === aid && assignment.course === cid);
+
+  return (
       <div id="wd-assignments-editor" className="container p-4">
       {/* Assignment Name */}
       <div className="row mb-3">
         <div className="col-12">
           <label htmlFor="wd-name">Assignment Name</label>
-          <input id="wd-name" value="A1" className="form-control w-100 mb-3" />
+          <input id="wd-name" value={assignment?.title || ""} className="form-control w-100 mb-3" readOnly/>
         </div>
       </div>
 
@@ -13,20 +20,7 @@ export default function AssignmentEditor() {
       <div className="row mb-3">
         <div className="col-12">
           <div className="form-control w-100 mb-3 p-3">
-            <p>The assignment is available online</p>
-            <p>
-              Submit a link to the landing page of your Web application running on Netlify.
-            </p>
-            <p>The landing page should include the following:</p>
-            <ul>
-              <li>Your full name and section</li>
-              <li>Links to each of the lab assignments</li>
-              <li>Link to the Kanbas application</li>
-              <li>Links to all relevant source code repositories</li>
-            </ul>
-            <p>
-              The Kanbas application should include a link to navigate back to the landing page.
-            </p>
+            {assignment?.description}
           </div>
         </div>
      
@@ -42,7 +36,7 @@ export default function AssignmentEditor() {
       <div className="row mb-3">
         <div className="col-12 text-end">
           <label htmlFor="wd-points" className="me-2">Points</label>
-          <input id="wd-points" value={100} className="form-control d-inline-block w-50" />
+          <input id="wd-points" value={assignment?.points} className="form-control d-inline-block w-50" />
         </div>
       </div>
 
@@ -116,15 +110,15 @@ export default function AssignmentEditor() {
                     </div>
                     <div className="form-group mt-3">
                       <label>Due</label>
-                      <input className="form-control" type="date" value="2024-05-13" />
+                      <input className="form-control" type="date" value={assignment?.dueDate} />
                     </div>
                     <div className="form-group mt-3">
                       <label>Available from</label>
-                      <input className="form-control" type="date" value="2024-05-06" />
+                      <input className="form-control" type="date" value={assignment?.availableDate} />
                     </div>
                     <div className="form-group mt-3">
                       <label>Until</label>
-                      <input className="form-control" type="date" value="2024-05-20" />
+                      <input className="form-control" type="date" value={assignment?.dueDate} />
                     </div>
                   </div>
                 </div>
@@ -134,8 +128,8 @@ export default function AssignmentEditor() {
               <div className="row">
                 <div className="col-sm-10 offset-sm-2">
                   <div className="d-flex justify-content-end">
-                    <button className="btn btn-secondary me-2">Cancel</button>
-                    <button className="btn btn-danger">Save</button>
+                    <Link to={`/Kanbas/Courses/${cid}/Assignments`} className="btn btn-secondary me-2">Cancel</Link>
+                    <Link to={`/Kanbas/Courses/${cid}/Assignments`} className="btn btn-danger">Save</Link>
                   </div>
                 </div>
               </div>
