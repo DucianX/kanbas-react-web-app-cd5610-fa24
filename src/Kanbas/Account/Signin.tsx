@@ -15,6 +15,7 @@ export default function Signin() {
         navigate("/Kanbas/Dashboard");
     };
 
+
     return (
 
         <div id="wd-signin-screen">

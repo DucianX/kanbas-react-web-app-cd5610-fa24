@@ -4,6 +4,7 @@ import Dashboard from "./Dashboard";
 import Courses from "./Courses";
 import * as db from "./Database";
 import { useState } from "react";
+import ProtectedRoute from "./Account/ProtectedRoute";
 
 
 export default function Kanbas() {
@@ -30,22 +31,22 @@ export default function Kanbas() {
         );
     };
     return (
-        <div id="wd-kanbas">
+        <div id="wd-kanbas" style={{ display: "flex" }}>
             <KanbasNavigation />
-            <div className="wd-main-content-offset p-3">
+            <div className="wd-main-content-offset p-3" style={{ marginLeft: "110px", flexGrow: 1 }}>
                 <Routes>
                     <Route path="/" element={<Navigate to="Dashboard" />} />
                     <Route path="Account" element={<h1>Account</h1>} />
-                    <Route path="Dashboard" element={
+                    <Route path="Dashboard" element={<ProtectedRoute>
                         <Dashboard
                             courses={courses}
                             course={course}
                             setCourse={setCourse}
                             addNewCourse={addNewCourse}
                             deleteCourse={deleteCourse}
-                            updateCourse={updateCourse}/>
+                            updateCourse={updateCourse}/></ProtectedRoute>
                     } />
-                    <Route path="Courses/:cid/*" element={<Courses courses={courses} />} />
+                    <Route path="Courses/:cid/*" element={<ProtectedRoute><Courses courses={courses} /></ProtectedRoute>} />
                 </Routes>
             </div>
         </div>);}
