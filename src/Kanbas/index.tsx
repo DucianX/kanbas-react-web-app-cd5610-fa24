@@ -4,6 +4,8 @@ import Dashboard from "./Dashboard";
 import Courses from "./Courses";
 import * as db from "./Database";
 import { useState } from "react";
+
+
 export default function Kanbas() {
     const [courses, setCourses] = useState<any[]>(db.courses);
     const [course, setCourse] = useState<any>({
