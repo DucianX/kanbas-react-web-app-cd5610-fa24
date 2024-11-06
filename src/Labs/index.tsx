@@ -3,9 +3,14 @@ import { Route, Routes, Navigate } from "react-router";
 import TOC from "./TOC";
 import Lab2 from "./Lab2";
 import Lab3 from "./Lab3";
+import React from "react";
+import Lab4 from "./Lab4";
+import store from "./store";
+import { Provider } from "react-redux";
 export default function Labs() {
     console.log("Hello, World!")
 return (
+    <Provider store={store}>
 <div>
 <h1>Yitian Xu's Labs</h1>
 <h2>Section 03</h2>
@@ -16,7 +21,10 @@ return (
 <Route path="Lab1" element={<Lab1 />} />
 <Route path="Lab2" element={<Lab2 />} />
 <Route path="Lab3/*" element={<Lab3 />} />
+<Route path="Lab4/*" element={<Lab4 />} />
 </Routes>
 </div>
+    </Provider>
+
 );
 }
