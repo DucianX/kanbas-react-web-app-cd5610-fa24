@@ -3,8 +3,9 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "./Dashboard";
 import Courses from "./Courses";
 import * as db from "./Database";
-import { useState } from "react";
+import React, { useState } from "react";
 import ProtectedRoute from "./Account/ProtectedRoute";
+import Account from "./Account";
 
 
 export default function Kanbas() {
@@ -36,7 +37,7 @@ export default function Kanbas() {
             <div className="wd-main-content-offset p-3" style={{ marginLeft: "110px", flexGrow: 1 }}>
                 <Routes>
                     <Route path="/" element={<Navigate to="Dashboard" />} />
-                    <Route path="Account" element={<h1>Account</h1>} />
+                    <Route path="Account/*" element={<Account/>} />
                     <Route path="Dashboard" element={<ProtectedRoute>
                         <Dashboard
                             courses={courses}

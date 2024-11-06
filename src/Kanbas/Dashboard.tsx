@@ -33,7 +33,8 @@ const { enrollments } = db;
           <hr/>
           <div id="wd-dashboard-courses" className="row">
               <div className="row row-cols-1 row-cols-md-5 g-4">
-                  {courses.filter((course) =>
+                  {courses
+                      .filter((course) =>
                       enrollments.some(
                           (enrollment) =>
                               enrollment.user === currentUser._id &&
