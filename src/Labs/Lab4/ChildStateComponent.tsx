@@ -12,6 +12,6 @@ export default function ChildStateComponent({ counter, setCounter }:
             <hr/>
         </div>
 
-        // code写完2.3.8，课程听到M7的40:40分钟
+
     );}
 

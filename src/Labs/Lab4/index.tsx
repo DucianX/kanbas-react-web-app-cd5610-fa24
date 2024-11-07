@@ -10,6 +10,7 @@ import ObjectStateVariable from "./ObjectStateVariable";
 import ArrayStateVariable from "./ArrayStateVariable";
 import ParentStateComponent from "./ParentStateComponent";
 import BooleanStateVariables from "./BooleanStateVariables";
+import ReduxExamples from "./ReduxExamples";
 
 export default function Lab4() {
     function sayHello() {
@@ -29,6 +30,8 @@ export default function Lab4() {
             <ObjectStateVariable/>
             <ArrayStateVariable/>
             <ParentStateComponent/>
+            {/*// code写完到2.3.8，课程听到M7的54:55分钟 记得听lana*/}
+            <ReduxExamples/>
         </div>
     );}
 
