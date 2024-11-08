@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import {useSelector} from "react-redux"
 export default function ArrayStateVariable() {
     const [array, setArray] = useState([1, 2, 3, 4, 5]);
     const addElement = () => {
@@ -7,9 +8,12 @@ export default function ArrayStateVariable() {
     const deleteElement = (index: number) => {
         setArray(array.filter((item, i) => i !== index));
     };
+    const { message } = useSelector((state: any) => state.helloReducer);
+
     return (
         <div id="wd-array-state-variables" style={{ margin: "10px" , alignItems:"left"}}>
             <h2>Array State Variable</h2>
+            {message}
             <button className="btn btn-success" style={{ marginBottom: "12px" }}  onClick={addElement}>Add Element</button>
             <div style={{display: "flex", flexDirection: "column"}}>
                 {array.map((item, index) => (

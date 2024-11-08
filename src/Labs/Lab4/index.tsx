@@ -11,17 +11,24 @@ import ArrayStateVariable from "./ArrayStateVariable";
 import ParentStateComponent from "./ParentStateComponent";
 import BooleanStateVariables from "./BooleanStateVariables";
 import ReduxExamples from "./ReduxExamples";
+import {useState} from "react";
+import CounterRedux from "./ReduxExamples/CounterRedux";
 
 export default function Lab4() {
     function sayHello() {
         alert("Hello");
     }
+    const [x, h] = useState(true);
     return (
         <div>
+
+            <input type="checkbox" checked={x} onChange={() => h(!x)} id="s"/>
+            <label htmlFor="s">Q</label>
+
             <h2>Lab 4</h2>
             <ClickEvent/>
             <PassingDataOnEvent/>
-            <PassingFunctions theFunction={sayHello} />
+            <PassingFunctions theFunction={sayHello}/>
             <EventObject/>
             <Counter/>
             <BooleanStateVariables/>
@@ -30,8 +37,9 @@ export default function Lab4() {
             <ObjectStateVariable/>
             <ArrayStateVariable/>
             <ParentStateComponent/>
-            {/*// code写完到2.3.8，课程听到M7的54:55分钟 记得听lana*/}
+            {/*// code刚写完2.4.3，课程听到M8的38:50分钟 */}
             <ReduxExamples/>
         </div>
-    );}
+    );
+}
 
