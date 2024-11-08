@@ -1,14 +1,19 @@
-export default function TodoItem({ todo, deleteTodo, setTodo }: {
-    todo: { id: string; title: string };
-    deleteTodo: (id: string) => void;
-    setTodo: (todo: { id: string; title: string }) => void;
+import { useDispatch } from "react-redux";
+// 从reducer里面导入这些函数，不再依赖父组件的上下文参数导入
+import { deleteTodo, setTodo } from "./todosReducer";
+import React from "react";
+
+export default function TodoItem({
+    todo,
+}:{
+    todo: { id: string, title: string };
 }) {
+    const dispatch = useDispatch();
     return (
-        // 已经破开了直接上文引用的dependency，现在通过传入参数来建立dependency
         <li key={todo.id} className="list-group-item">
-            <button onClick={() => deleteTodo(todo.id)}
+            <button onClick={() => dispatch(deleteTodo(todo.id))}
                     id="wd-delete-todo-click"> Delete </button>
-            <button onClick={() => setTodo(todo)}
+            <button onClick={() => dispatch(setTodo(todo))}
                     id="wd-set-todo-click"> Edit </button>
             {todo.title}    </li>);}
 
