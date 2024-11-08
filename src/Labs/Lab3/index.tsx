@@ -29,10 +29,14 @@ import Add from "./Add";
 import Square from "./Square";
 import Highlight from "./Highlight";
 import PathParameters from "./PathParameters";
+import TodoForm from "../Lab4/ReduxExamples/todos/TodoForm";
+import { useSelector } from "react-redux";
 export default function Lab3() {
+    const todos = useSelector((state:any) => state.todosReducer);
     return (
         <div id="wd-lab3">
             <h3>Lab 3</h3>
+            <TodoForm/>
             <VariablesAndConstants/>
             <VariableTypes/>
             <BooleanVariables/>
@@ -64,11 +68,13 @@ export default function Lab3() {
             <h4>Square of 4</h4>
             <Square>4</Square>
             <hr/>
-        <Highlight>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipitratione eaque illo minus cum, saepe totam
-                vel nihil repellat nemo explicabo excepturi consectetur. Modi omnis minus sequi maiores, provident voluptates.
-        </Highlight>
-                <PathParameters/>
+            <Highlight>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipitratione eaque illo minus cum, saepe
+                totam
+                vel nihil repellat nemo explicabo excepturi consectetur. Modi omnis minus sequi maiores, provident
+                voluptates.
+            </Highlight>
+            <PathParameters/>
 
         </div>
     );
