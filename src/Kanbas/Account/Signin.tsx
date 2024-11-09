@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { setCurrentUser } from "./reducer";
 import { useDispatch } from "react-redux";
 import * as db from "../Database";
+import ProtectedContent from "./ProtectedContent";
 export default function Signin() {
 
     const [credentials, setCredentials] = useState<any>({});
@@ -19,7 +20,7 @@ export default function Signin() {
     return (
         
         <div id="wd-signin-screen">
-        <h3>Sign in</h3>
+        <h3><ProtectedContent>Sign in</ProtectedContent></h3>
         Yitian Xu's Labs
         Section 03
         https://github.com/DucianX/kanbas-react-web-app-cd5610-fa24

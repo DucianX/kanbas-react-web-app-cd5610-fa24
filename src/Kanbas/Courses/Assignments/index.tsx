@@ -1,9 +1,10 @@
-import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
+import React, { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
 import {BsGripVertical} from "react-icons/bs";
 import {FaPlus, FaSearch, FaCheckCircle, FaEllipsisV, FaChevronDown} from "react-icons/fa";
 import {IoMdBookmarks} from "react-icons/io";
 import {Link, useParams} from "react-router-dom";
 import assignments from "../../Database/assignments.json";
+import AssignmentControlButtons from "./AssignmentControlButtons";
 
 export default function Assignments() {
   // 使用 useParams 获取课程 ID
@@ -34,21 +35,23 @@ export default function Assignments() {
 
           {/* 右侧按钮组 */}
           <div className="d-flex">
-            <button
-                id="wd-add-group-btn"
-                className="btn btn-lg btn-secondary me-2"
-            >
-              <FaPlus className="position-relative me-2" style={{bottom: "1px"}}/>
-              Group
-            </button>
+              <AssignmentControlButtons/>
+            {/*<button*/}
+            {/*    id="wd-add-group-btn"*/}
+            {/*    className="btn btn-lg btn-secondary me-2"*/}
+            {/*>*/}
 
-            <button
-                id="wd-add-assignment-btn"
-                className="btn btn-lg btn-danger"
-            >
-              <FaPlus className="position-relative me-2" style={{bottom: "1px"}}/>
-              Assignment
-            </button>
+            {/*  <FaPlus className="position-relative me-2" style={{bottom: "1px"}}/>*/}
+            {/*  Group*/}
+            {/*</button>*/}
+
+            {/*<button*/}
+            {/*    id="wd-add-assignment-btn"*/}
+            {/*    className="btn btn-lg btn-danger"*/}
+            {/*>*/}
+            {/*  <FaPlus className="position-relative me-2" style={{bottom: "1px"}}/>*/}
+            {/*  Assignment*/}
+            {/*</button>*/}
           </div>
         </div>
 
