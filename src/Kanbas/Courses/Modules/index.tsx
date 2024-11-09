@@ -4,7 +4,7 @@ import { BsGripVertical } from "react-icons/bs";
 import ModuleControlButtons from "./ModuleControlButtons";
 import { useParams } from "react-router";
 import * as db from "../../Database";
-import {useState} from "react";
+import React, {useState} from "react";
 
 export default function Modules() {
   const { cid } = useParams();
@@ -16,6 +16,16 @@ export default function Modules() {
         setModuleName("");
     };
 
+    const deleteModule = (moduleId: string) => {
+        setModules(modules.filter((m) => m._id !== moduleId));
+    };
+
+    const editModule = (moduleId: string) => {
+        setModules(modules.map((m) => (m._id === moduleId ? { ...m, editing: true } : m)));
+    };
+    const updateModule = (module: any) => {
+        setModules(modules.map((m) => (m._id === module._id ? module : m)));
+    };
 
 
     return (
@@ -30,8 +40,23 @@ export default function Modules() {
     <li className="wd-module list-group-item p-0 mb-5 fs-5 border-gray">
     
     <div className="wd-title p-3 ps-2 bg-secondary">
-        <BsGripVertical className="me-2 fs-3" /> {module.name} <ModuleControlButtons/>
-      </div>
+        <BsGripVertical className="me-2 fs-3" /> {module.name}
+        {!module.editing && module.name}
+        { module.editing && (
+            <input className="form-control w-50 d-inline-block"
+                   onChange={(e) => updateModule({ ...module, name: e.target.value })}
+                   onKeyDown={(e) => {
+                       if (e.key === "Enter") {
+                           updateModule({ ...module, editing: false });
+                       }
+                   }}
+                   defaultValue={module.name}/>
+        )}
+
+        <ModuleControlButtons moduleId={module._id}
+                                      deleteModule={deleteModule}   editModule={editModule}/>
+
+    </div>
       {module.lessons && (
       <ul className="wd-lessons list-group rounded-0">
         {module.lessons.map((lesson: any) => (
