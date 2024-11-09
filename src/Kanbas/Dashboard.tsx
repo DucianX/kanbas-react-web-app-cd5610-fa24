@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import {useState} from "react";
 import { useSelector } from "react-redux";
 import * as db from "./Database";
+import ProtectedContent from "./Account/ProtectedContent";
 export default function Dashboard({ courses, course, setCourse, addNewCourse,
                                       deleteCourse, updateCourse }: {
     courses: any[]; course: any; setCourse: (course: any) => void;
@@ -13,8 +14,10 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
     return (
         <div id="wd-dashboard">
             <h1 id="wd-dashboard-title">Dashboard</h1>
-            <hr/>
+            <hr/><ProtectedContent>
+            {/*hr for horizontal rule*/}
             <h5>New Course
+
                 <button className="btn btn-primary float-end"
                         id="wd-add-new-course-click"
                         onClick={addNewCourse}>
@@ -25,6 +28,7 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                         onClick={updateCourse} id="wd-update-course-click">
                     Update
                 </button>
+
             </h5>
             <br/>
             <input value={course.name} className="form-control mb-2"
@@ -34,7 +38,7 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
 
 
             <hr/>
-
+            </ProtectedContent>
             <h2 id="wd-dashboard-published">Published Courses (?)</h2>
             <hr/>
             <div id="wd-dashboard-courses" className="row">
@@ -61,7 +65,7 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                                         </p>
                                         <button className="btn btn-primary"> Go</button>
 
-                                        <button onClick={(event) => {
+                                    <ProtectedContent> <button onClick={(event) => {
                                             event.preventDefault();
                                             deleteCourse(course._id);
                                         }} className="btn btn-danger float-end"
@@ -77,7 +81,7 @@ export default function Dashboard({ courses, course, setCourse, addNewCourse,
                                                 className="btn btn-warning me-2 float-end">
                                             Edit
                                         </button>
-
+                                    </ProtectedContent>
 
                                     </div>
                                 </Link>

@@ -4,5 +4,5 @@ export default function ProtectedContent({ children }: { children: any }) {
     if (currentUser && currentUser.role == "FACULTY") {
         return children;
     } else {
-        return children;
+        return ;
     }}

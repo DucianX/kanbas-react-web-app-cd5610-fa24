@@ -5,6 +5,7 @@ import {IoMdBookmarks} from "react-icons/io";
 import {Link, useParams} from "react-router-dom";
 import assignments from "../../Database/assignments.json";
 import AssignmentControlButtons from "./AssignmentControlButtons";
+import GroupAssignmentButtons from "./GroupAssignmentButtons";
 
 export default function Assignments() {
   // 使用 useParams 获取课程 ID
@@ -35,23 +36,7 @@ export default function Assignments() {
 
           {/* 右侧按钮组 */}
           <div className="d-flex">
-              <AssignmentControlButtons/>
-            {/*<button*/}
-            {/*    id="wd-add-group-btn"*/}
-            {/*    className="btn btn-lg btn-secondary me-2"*/}
-            {/*>*/}
-
-            {/*  <FaPlus className="position-relative me-2" style={{bottom: "1px"}}/>*/}
-            {/*  Group*/}
-            {/*</button>*/}
-
-            {/*<button*/}
-            {/*    id="wd-add-assignment-btn"*/}
-            {/*    className="btn btn-lg btn-danger"*/}
-            {/*>*/}
-            {/*  <FaPlus className="position-relative me-2" style={{bottom: "1px"}}/>*/}
-            {/*  Assignment*/}
-            {/*</button>*/}
+            <GroupAssignmentButtons/>
           </div>
         </div>
 
@@ -64,8 +49,9 @@ export default function Assignments() {
           </div>
           <div className="d-flex align-items-center">
             <span className="badge bg-light text-dark me-3">40% of Total</span>
-            <FaPlus className="text-muted me-3"/>
-            <FaEllipsisV className="text-muted"/>
+              <AssignmentControlButtons/>
+            {/*<FaPlus className="text-muted me-3"/>*/}
+            {/*<FaEllipsisV className="text-muted"/>*/}
           </div>
         </div>
 

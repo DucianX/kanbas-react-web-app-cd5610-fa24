@@ -7,8 +7,10 @@ import { IoIosStats } from "react-icons/io";
 import { HiOutlineSpeakerphone } from "react-icons/hi";
 import { GiChemicalDrop } from "react-icons/gi";
 import { IoHomeOutline } from "react-icons/io5";
+import ProtectedContent from "../../Account/ProtectedContent";
 export default function CourseStatus() {
   return (
+      <ProtectedContent>
     <div id="wd-course-status" className="ms-4" style={{ width: "300px" }}>
       <h2>Course Status</h2>
 
@@ -44,4 +46,5 @@ export default function CourseStatus() {
         <CiBellOn className="me-2 fs-5" /> View Course Notifications
       </button>
     </div>
+      </ProtectedContent>
 );}
