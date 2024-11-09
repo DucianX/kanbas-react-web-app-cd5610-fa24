@@ -1,5 +1,15 @@
-import { Link } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import * as db from "../Database";
+import {setCurrentUser} from "./reducer";
+import { useDispatch } from "react-redux";
+
 export default function Profile() {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const signout = () => {
+        dispatch(setCurrentUser(null));
+        navigate("/Kanbas/Dashboard/Signin");
+    };
 return (
 <div id="wd-profile-screen">
 <h3>Profile</h3>
@@ -16,6 +26,6 @@ type="password" />
 <option value="FACULTY">Faculty</option>
 <option value="STUDENT">Student</option>
 </select>
-<Link to="/Kanbas/Account/Signin" className="btn btn-danger w-100">Sign out</Link>
+<Link onClick = {signout} to="/Kanbas/Account/Signin" className="btn btn-danger w-100">Sign out</Link>
 </div>
 );}
