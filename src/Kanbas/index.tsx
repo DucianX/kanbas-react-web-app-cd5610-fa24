@@ -7,7 +7,9 @@ import "./styles.css";
 import PeopleTable from "./Courses/People/Table";
 import {useState} from "react";
 import * as db from "./Database";
-
+import store from "./store";
+import { Provider } from "react-redux";
+import ProtectedRoute from "./Account/ProtectedRoute";
 export default function Kanbas() {
     const [courses, setCourses] = useState(db.courses);
 
@@ -38,6 +40,9 @@ export default function Kanbas() {
         setCourses(courses.filter((course) => course._id !== courseId));
     };
   return (
+      <Provider store={store}>
+
+
     <div id="wd-kanbas">
  
             <KanbasNavigation />
@@ -45,15 +50,15 @@ export default function Kanbas() {
             <Routes>
               <Route path="/" element={<Navigate to="/Kanbas/Account" />} />
               <Route path="/Account/*" element={<Account />} />
-              <Route path="/Dashboard" element={<Dashboard
+              <Route path="/Dashboard" element={<ProtectedRoute><Dashboard
                   courses={courses}
                   course={course}
                   setCourse={setCourse}
                   addNewCourse={addNewCourse}
                   deleteCourse={deleteCourse}
-                  updateCourse={updateCourse}/>
+                  updateCourse={updateCourse}/></ProtectedRoute>
               } />
-              <Route path="/Courses/:cid/*" element={<Courses courses={courses}/>} />
+              <Route path="/Courses/:cid/*" element={<ProtectedRoute><Courses courses={courses}/></ProtectedRoute>} />
               <Route path="/Calendar" element={<h1>Calendar</h1>} />
               <Route path="/Inbox" element={<h1>Inbox</h1>} />
               <Route path="People" element={<PeopleTable />} />
@@ -62,4 +67,6 @@ export default function Kanbas() {
           </div>
      
     </div>
+      </Provider>
+      // 刚写到provider的部分1:53:52。
 );}
