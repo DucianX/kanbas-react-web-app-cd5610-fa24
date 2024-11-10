@@ -13,24 +13,7 @@ import { useSelector, useDispatch }
 
 export default function Modules() {
   const { cid } = useParams();
-  // const [modules, setModules] = useState<any[]>(db.modules);
     const [moduleName, setModuleName] = useState("");
-    // const addModule = () => {
-    //     setModules([ ...modules, { _id: new Date().getTime().toString(),
-    //         name: moduleName, course: cid, lessons: [], }, ]);
-    //     setModuleName("");
-    // };
-    //
-    // const deleteModule = (moduleId: string) => {
-    //     setModules(modules.filter((m) => m._id !== moduleId));
-    // };
-    //
-    // const editModule = (moduleId: string) => {
-    //     setModules(modules.map((m) => (m._id === moduleId ? { ...m, editing: true } : m)));
-    // };
-    // const updateModule = (module: any) => {
-    //     setModules(modules.map((m) => (m._id === module._id ? module : m)));
-    // };
 
     const { modules } = useSelector(
         (state: any) => state.modulesReducer);

@@ -1,10 +1,16 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import assignments from "../../Database/assignments.json";
+import { useSelector, useDispatch }
+    from "react-redux";
+import { addAssignment } from "./reducer";
+import {useState} from "react"; // 导入 addAssignment 动作
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams();
   // 按照当前cid aid进行过滤
   const assignment = assignments.find((assignment: { _id: string ; course: string ; }) => assignment._id === aid && assignment.course === cid);
+
+
 
   return (
       <div id="wd-assignments-editor" className="container p-4">
@@ -141,5 +147,4 @@ export default function AssignmentEditor() {
      
       </div></div>
   );}
-  
   
