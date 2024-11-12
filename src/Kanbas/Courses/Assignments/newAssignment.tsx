@@ -1,9 +1,6 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import assignments from "../../Database/assignments.json";
-import { useSelector, useDispatch }
-    from "react-redux";
-import { addAssignment } from "./reducer";
-import {useState} from "react"; // 导入 addAssignment 动作
+
 
 export default function newAssignment() {
     const { cid, aid } = useParams();
