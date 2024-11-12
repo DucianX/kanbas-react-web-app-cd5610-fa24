@@ -1,9 +1,6 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import assignments from "../../Database/assignments.json";
-import { useSelector, useDispatch }
-    from "react-redux";
-import { addAssignment } from "./reducer";
-import {useState} from "react"; // 导入 addAssignment 动作
+
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams();
@@ -11,7 +8,8 @@ export default function AssignmentEditor() {
   const assignment = assignments.find((assignment: { _id: string ; course: string ; }) => assignment._id === aid && assignment.course === cid);
 
 
-
+    // 我应该在同一个editor里面实现添加的逻辑吗? 还是要新建一个?
+    // 我不确定怎么把这么多input field都更新进去 需要每个inputField都写一遍dispatch函数吗 感觉不太对
   return (
       <div id="wd-assignments-editor" className="container p-4">
       {/* Assignment Name */}

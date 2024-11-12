@@ -9,6 +9,7 @@ export default function GroupAssignmentButtons() {
     return (
         <div className="flex-end">
             <ProtectedContent>
+                {/*添加组按钮*/}
                 <button
                     id="wd-add-group-btn"
                     className="btn btn-lg btn-secondary me-2"
@@ -17,6 +18,8 @@ export default function GroupAssignmentButtons() {
                     <BsPlus className="position-relative me-2" style={{bottom: "1px"}}/>
                     Group
                 </button>
+
+                {/*添加作业按钮*/}
                 <Link to = {`/Kanbas/Courses/${cid}/Assignments/New`}>
                     <button
                         id="wd-add-assignment-btn"
@@ -26,6 +29,7 @@ export default function GroupAssignmentButtons() {
                         Assignment
                     </button>
                 </Link>
+
             </ProtectedContent>
         </div>
     );

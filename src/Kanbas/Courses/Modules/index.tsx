@@ -15,6 +15,7 @@ export default function Modules() {
   const { cid } = useParams();
     const [moduleName, setModuleName] = useState("");
 
+    // 在这里用selector建立连接
     const { modules } = useSelector(
         (state: any) => state.modulesReducer);
     const dispatch = useDispatch();
