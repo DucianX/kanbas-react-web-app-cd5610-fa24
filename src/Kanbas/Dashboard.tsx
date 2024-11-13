@@ -44,30 +44,30 @@ export default function Dashboard() {
             </StudentContent>
 
 
-            {/*<FacultyContent>*/}
-            {/*    /!*hr for horizontal rule*!/*/}
-            {/*    <h5>New Course*/}
+            <FacultyContent>
+                {/*hr for horizontal rule*/}
+                <h5>New Course
 
-            {/*        <button className="btn btn-primary float-end"*/}
-            {/*                id="wd-add-new-course-click"*/}
-            {/*                onClick={addNewCourse}>*/}
-            {/*            Add*/}
-            {/*        </button>*/}
+                    <button className="btn btn-primary float-end"
+                            id="wd-add-new-course-click"
+                            onClick={addNewCourse}>
+                        Add
+                    </button>
 
-            {/*        <button className="btn btn-warning float-end me-2"*/}
-            {/*                onClick={updateNewCourse} id="wd-update-course-click">*/}
-            {/*            Update*/}
-            {/*        </button>*/}
+                    <button className="btn btn-warning float-end me-2"
+                            onClick={updateNewCourse} id="wd-update-course-click">
+                        Update
+                    </button>
 
-            {/*    </h5>*/}
-            {/*    <br/>*/}
-            {/*    /!*？？？？？？？？这里的course是怎么来得来着*!/*/}
-            {/*    <input value={course.name} className="form-control mb-2"*/}
-            {/*           onChange={(e) => setCourse({...course, name: e.target.value})}/>*/}
-            {/*    <textarea value={course.description} className="form-control"*/}
-            {/*              onChange={(e) => setCourse({...course, description: e.target.value})}/>*/}
-            {/*    <hr/>*/}
-            {/*</FacultyContent>*/}
+                </h5>
+                <br/>
+                {/*？？？？？？？？这里的course是怎么来得来着*/}
+                <input value={course.name} className="form-control mb-2"
+                       onChange={(e) => setCourse({...course, name: e.target.value})}/>
+                <textarea value={course.description} className="form-control"
+                          onChange={(e) => setCourse({...course, description: e.target.value})}/>
+                <hr/>
+            </FacultyContent>
 
 
             <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2>
