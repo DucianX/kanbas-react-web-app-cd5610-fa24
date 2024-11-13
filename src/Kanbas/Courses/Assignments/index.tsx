@@ -1,4 +1,4 @@
-import React, {Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal} from "react";
+import React, {Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal, useState} from "react";
 import {BsGripVertical} from "react-icons/bs";
 import {FaPlus, FaSearch, FaCheckCircle, FaEllipsisV, FaChevronDown, FaTrash} from "react-icons/fa";
 import {IoMdBookmarks} from "react-icons/io";
@@ -7,7 +7,8 @@ import AssignmentControlButtons from "./AssignmentControlButtons";
 import GroupAssignmentButtons from "./GroupAssignmentButtons";
 import {useSelector, useDispatch}
     from "react-redux";
-import {deleteAssignment} from "./reducer";
+import {addAssignment, deleteAssignment} from "./reducer";
+import AssignmentEditor from "./AssignmentEditor";
 
 export default function Assignments() {
     // 使用 useParams 获取课程 ID
@@ -26,6 +27,7 @@ export default function Assignments() {
 
     const dispatch = useDispatch();
 
+
     return (
         <div id="wd-assignments" className="p-4">
             {/* 搜索框和按钮 */}
@@ -43,7 +45,7 @@ export default function Assignments() {
                     />
                 </div>
 
-                {/* 右侧按钮组 */}
+                {/* 顶部Group/Assignment按钮组 */}
                 <div className="d-flex">
                     <GroupAssignmentButtons/>
                 </div>
@@ -93,11 +95,20 @@ export default function Assignments() {
                         <div className="d-flex align-items-center">
                             <FaCheckCircle className="text-success me-3"/>
                             <FaEllipsisV className=" me-3"/>
-                            <FaTrash className="text-danger me-2 " onClick={() => dispatch(deleteAssignment(assignment._id))}/>
+
+                            <FaTrash className="text-danger me-2 "
+                                     data-bs-toggle="modal" data-bs-target="#wd-delete-assignment-dialog"
+                            />
                         </div>
+                        {/* 模块编辑器 */}
+                        <AssignmentEditor dialogTitle="Are you sure you wanna delete ?"
+                            // 注意此处需要进行一个lambda的写，用dispatch触发重新渲染
+                                          deleteAssignment={() => dispatch(deleteAssignment(assignment._id))}/>
                     </li>
                 ))}
             </ul>
+
+
         </div>
     );
 }

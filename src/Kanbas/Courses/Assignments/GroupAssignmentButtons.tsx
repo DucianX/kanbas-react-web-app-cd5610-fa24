@@ -1,6 +1,6 @@
 import { IoEllipsisVertical } from "react-icons/io5";
 import { BsPlus } from "react-icons/bs";
-import ProtectedContent from "../../Account/ProtectedContent";
+import FacultyContent from "../../Account/FacultyContent";
 import {FaPlus} from "react-icons/fa";
 import React from "react";
 import {Link, useParams} from "react-router-dom";
@@ -8,7 +8,7 @@ export default function GroupAssignmentButtons() {
     const {cid} = useParams();
     return (
         <div className="flex-end">
-            <ProtectedContent>
+            <FacultyContent>
                 {/*添加组按钮*/}
                 <button
                     id="wd-add-group-btn"
@@ -30,7 +30,7 @@ export default function GroupAssignmentButtons() {
                     </button>
                 </Link>
 
-            </ProtectedContent>
+            </FacultyContent>
         </div>
     );
 }

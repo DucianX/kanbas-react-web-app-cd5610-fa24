@@ -1,55 +1,82 @@
 import {Link} from "react-router-dom";
-import {useState} from "react";
 import {useSelector} from "react-redux";
 import * as db from "./Database";
-import ProtectedContent from "./Account/ProtectedContent";
+import FacultyContent from "./Account/FacultyContent";
+import StudentContent from "./Account/StudentContent";
+import {useState} from "react";
+import {
+    addNewCourse, updateNewCourse, deleteCourse
+}
+    from "./Courses/reducer";
 
-export default function Dashboard({
-                                      courses, course, setCourse, addNewCourse,
-                                      deleteCourse, updateCourse
-                                  }: {
-    courses: any[]; course: any; setCourse: (course: any) => void;
-    addNewCourse: () => void; deleteCourse: (course: any) => void;
-    updateCourse: () => void;
-}) {
+export default function Dashboard() {
+    const {courses} = useSelector((state: any) => state.courseReducer);
     const {currentUser} = useSelector((state: any) => state.accountReducer);
-    const {enrollments} = db;
+    const {enrollments} = useSelector((state: any) => state.enrollmentReducer);
+    const [showEnrollments, setShowEnrollments] = useState(false);
+    const [showFiltered, setFiltered] = useState(false);
+    const [course, setCourse] = useState();
+    const filteredCourses = showFiltered
+        ? courses
+        : courses.filter((course: { _id: string; }) =>
+            enrollments.some(
+                (enrollment: {user: string; course: string}) =>
+                    enrollment.user === currentUser._id &&
+                    enrollment.course === course._id
+            )
+        )
+
+
     return (
         <div id="wd-dashboard">
             <h1 id="wd-dashboard-title">Dashboard</h1>
             <hr/>
-            <ProtectedContent>
-                {/*hr for horizontal rule*/}
-                <h5>New Course
 
+            <StudentContent>
+                <div className="flex float-end">
                     <button className="btn btn-primary float-end"
                             id="wd-add-new-course-click"
-                            onClick={addNewCourse}>
-                        Add
+                            onClick = {() => showEnrollments ? setShowEnrollments(true) : setFiltered(true)}
+                        >
+                        Enrollments
                     </button>
-
-                    <button className="btn btn-warning float-end me-2"
-                            onClick={updateCourse} id="wd-update-course-click">
-                        Update
-                    </button>
-
-                </h5>
-                <br/>
-                <input value={course.name} className="form-control mb-2"
-                       onChange={(e) => setCourse({...course, name: e.target.value})}/>
-                <textarea value={course.description} className="form-control"
-                          onChange={(e) => setCourse({...course, description: e.target.value})}/>
+                </div>
+            </StudentContent>
 
 
-                <hr/>
-            </ProtectedContent>
+            {/*<FacultyContent>*/}
+            {/*    /!*hr for horizontal rule*!/*/}
+            {/*    <h5>New Course*/}
+
+            {/*        <button className="btn btn-primary float-end"*/}
+            {/*                id="wd-add-new-course-click"*/}
+            {/*                onClick={addNewCourse}>*/}
+            {/*            Add*/}
+            {/*        </button>*/}
+
+            {/*        <button className="btn btn-warning float-end me-2"*/}
+            {/*                onClick={updateNewCourse} id="wd-update-course-click">*/}
+            {/*            Update*/}
+            {/*        </button>*/}
+
+            {/*    </h5>*/}
+            {/*    <br/>*/}
+            {/*    /!*？？？？？？？？这里的course是怎么来得来着*!/*/}
+            {/*    <input value={course.name} className="form-control mb-2"*/}
+            {/*           onChange={(e) => setCourse({...course, name: e.target.value})}/>*/}
+            {/*    <textarea value={course.description} className="form-control"*/}
+            {/*              onChange={(e) => setCourse({...course, description: e.target.value})}/>*/}
+            {/*    <hr/>*/}
+            {/*</FacultyContent>*/}
+
+
             <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2>
             <hr/>
             <div id="wd-dashboard-courses" className="row">
                 <div className="row row-cols-1 row-cols-md-5 g-4">
-                    {courses.filter((course) =>
+                    {courses.filter((course: any) =>
                         enrollments.some(
-                            (enrollment) =>
+                            (enrollment : any) =>
                                 enrollment.user === currentUser._id &&
                                 enrollment.course === course._id
                         ))
@@ -69,7 +96,7 @@ export default function Dashboard({
                                             </p>
                                             <button className="btn btn-primary"> Go</button>
 
-                                            <ProtectedContent>
+                                            <FacultyContent>
                                                 <button onClick={(event) => {
                                                     event.preventDefault();
                                                     deleteCourse(course._id);
@@ -86,7 +113,7 @@ export default function Dashboard({
                                                         className="btn btn-warning me-2 float-end">
                                                     Edit
                                                 </button>
-                                            </ProtectedContent>
+                                            </FacultyContent>
 
                                         </div>
                                     </Link>
