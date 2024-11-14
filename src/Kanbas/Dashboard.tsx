@@ -7,18 +7,21 @@ import {
     addCourse, updateCourse, deleteCourse
 }
     from "./Courses/coursesReducer";
+import {addEnrollment, deleteEnrollment} from "./Courses/enrollmentsReducer";
 
 
 export default function Dashboard() {
     const {courses} = useSelector((state: any) => state.coursesReducer);
     const {currentUser} = useSelector((state: any) => state.accountReducer);
     const {enrollments} = useSelector((state: any) => state.enrollmentsReducer);
-    const [showEnrollments, setShowEnrollments] = useState(false);
-    const [showFiltered, setFiltered] = useState(false);
 
-    const filteredCourses = showFiltered
-        ? courses
-        : courses.filter((course: { _id: string; }) =>
+    // 我们只需要设置一个filter，把没有注册的course都过滤掉
+    const [filtered, setFiltered] = useState(false);
+    // 检查的是reducer里面的enrollment库有没有当前用户和course交集的记录
+
+
+    const filteredCourses =
+        courses.filter((course: { _id: string; }) =>
             enrollments.some(
                 (enrollment: {user: string; course: string}) =>
                     enrollment.user === currentUser._id &&
@@ -36,7 +39,10 @@ export default function Dashboard() {
         "credits": 0,
         "description": ""
     });
-
+    const [enrollment, setEnrollment] = useState<any>(
+    { "_id": "1", "user": "123", "course": "RS101" }
+    )
+    const variableCourse = filtered ? filteredCourses : courses;
 
     return (
         <div id="wd-dashboard">
@@ -44,11 +50,10 @@ export default function Dashboard() {
             <hr/>
 
             <StudentContent>
-
                 <div className="flex float-end">
                     <button className="btn btn-primary float-end"
                             id="wd-add-new-course-click"
-                            onClick = {() => showEnrollments ? setShowEnrollments(true) : setFiltered(true)}
+                            onClick = {() => setFiltered(!filtered)}
                         >
                         Enrollments
                     </button>
@@ -84,12 +89,11 @@ export default function Dashboard() {
 
 
             {/*函数主界面*/}
-            我得想办法写一个空的course作为默认值，然后在这里根新他的state给上面的编辑器使用
             <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2>
             <hr/>
             <div id="wd-dashboard-courses" className="row">
                 <div className="row row-cols-1 row-cols-md-5 g-4">
-                    {courses.map((course: any) => (
+                    {variableCourse.map((course: any) => (
                             <div className="wd-dashboard-course col" style={{width: "300px"}}>
                                 <div className="card rounded-3 overflow-hidden">
                                     <Link className="wd-dashboard-course-link text-decoration-none text-dark"
@@ -105,10 +109,12 @@ export default function Dashboard() {
                                             </p>
                                             <button className="btn btn-primary"> Go</button>
 
+
+                                            {/*这里是教职工才能看到的按钮*/}
                                             <FacultyContent>
                                                 <button onClick={(event) => {
                                                     event.preventDefault();
-                                                    deleteCourse(course._id);
+                                                    dispatch(deleteCourse(course._id));
                                                 }} className="btn btn-danger float-end"
                                                         id="wd-delete-course-click">
                                                     Delete
@@ -124,13 +130,42 @@ export default function Dashboard() {
                                                 </button>
                                             </FacultyContent>
 
+                                            {/*学生能看到的按钮*/}
+                                            <StudentContent>
+                                                {enrollments.some(
+                                                    (enrollment: {user: string; course: string}) =>
+                                                        enrollment.user === currentUser._id &&
+                                                        enrollment.course === course._id
+                                                ) && <button onClick={(e) => {
+                                                    e.preventDefault();
+                                                    dispatch(deleteEnrollment({user: currentUser._id, course: course._id}));
+                                                }} className="btn btn-danger float-end"
+                                                        id="wd-delete-course-click">
+                                                     Unenroll
+                                                </button>}
+
+                                                {!enrollments.some(
+                                                (enrollment: {user: string; course: string}) =>
+                                                enrollment.user === currentUser._id &&
+                                                enrollment.course === course._id
+                                                ) && <button id="wd-edit-course-click"
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            dispatch(addEnrollment({user: currentUser._id, course: course._id}));
+                                                        }
+                                                        }
+                                                        className="btn btn-warning me-2 float-end">
+                                                    Enroll
+                                                </button>}
+                                            </StudentContent>
+
                                         </div>
                                     </Link>
                                 </div>
                             </div>
 
 
-                        ))}
+                    ))}
                 </div>
             </div>
         </div>
