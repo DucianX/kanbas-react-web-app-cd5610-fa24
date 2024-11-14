@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom";
-import {useSelector} from "react-redux";
+import {useSelector, useDispatch} from "react-redux";
 import FacultyContent from "./Account/FacultyContent";
 import StudentContent from "./Account/StudentContent";
 import {useState} from "react";
@@ -13,7 +13,6 @@ export default function Dashboard() {
     const {courses} = useSelector((state: any) => state.coursesReducer);
     const {currentUser} = useSelector((state: any) => state.accountReducer);
     const {enrollments} = useSelector((state: any) => state.enrollmentsReducer);
-
     const [showEnrollments, setShowEnrollments] = useState(false);
     const [showFiltered, setFiltered] = useState(false);
 
@@ -26,8 +25,17 @@ export default function Dashboard() {
                     enrollment.course === course._id
             )
         )
-
-    const [course, setCourse] = useState<any>(null); // 用于保存当前编辑的课程
+    const dispatch = useDispatch()
+    const [course, setCourse] = useState<any>({
+        "_id": "",
+        "name": "",
+        "number": "",
+        "startDate": "",
+        "endDate": "",
+        "department": "",
+        "credits": 0,
+        "description": ""
+    });
 
 
     return (
@@ -35,7 +43,6 @@ export default function Dashboard() {
             <h1 id="wd-dashboard-title">Dashboard</h1>
             <hr/>
 
-            {courses.map((course: any) => (
             <StudentContent>
 
                 <div className="flex float-end">
@@ -48,21 +55,19 @@ export default function Dashboard() {
                 </div>
 
             </StudentContent>
-            ))}
 
-            {courses.map((course: any) => (
             <FacultyContent>
-
+                {/*给教职工用的增改courses按钮*/}
                 {/*hr for horizontal rule*/}
                 <h5>New Course
                     <button className="btn btn-primary float-end"
                             id="wd-add-new-course-click"
-                            onClick={addCourse}>
+                            onClick={() => dispatch(addCourse(course))}>
                         Add
                     </button>
 
                     <button className="btn btn-warning float-end me-2"
-                            onClick={updateCourse} id="wd-update-course-click">
+                            onClick={() => dispatch(updateCourse(course))} id="wd-update-course-click">
                         Update
                     </button>
 
@@ -75,10 +80,11 @@ export default function Dashboard() {
                           onChange={(e) => setCourse({...course, description: e.target.value})}/>
                 <hr/>
             </FacultyContent>
-            ))}
+
 
 
             {/*函数主界面*/}
+            我得想办法写一个空的course作为默认值，然后在这里根新他的state给上面的编辑器使用
             <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2>
             <hr/>
             <div id="wd-dashboard-courses" className="row">
