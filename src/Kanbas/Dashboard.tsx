@@ -1,21 +1,22 @@
 import {Link} from "react-router-dom";
 import {useSelector} from "react-redux";
-import * as db from "./Database";
 import FacultyContent from "./Account/FacultyContent";
 import StudentContent from "./Account/StudentContent";
 import {useState} from "react";
 import {
-    addNewCourse, updateNewCourse, deleteCourse
+    addCourse, updateCourse, deleteCourse
 }
-    from "./Courses/reducer";
+    from "./Courses/coursesReducer";
+
 
 export default function Dashboard() {
-    const {courses} = useSelector((state: any) => state.courseReducer);
+    const {courses} = useSelector((state: any) => state.coursesReducer);
     const {currentUser} = useSelector((state: any) => state.accountReducer);
-    const {enrollments} = useSelector((state: any) => state.enrollmentReducer);
+    const {enrollments} = useSelector((state: any) => state.enrollmentsReducer);
+
     const [showEnrollments, setShowEnrollments] = useState(false);
     const [showFiltered, setFiltered] = useState(false);
-    const [course, setCourse] = useState();
+
     const filteredCourses = showFiltered
         ? courses
         : courses.filter((course: { _id: string; }) =>
@@ -26,13 +27,17 @@ export default function Dashboard() {
             )
         )
 
+    const [course, setCourse] = useState<any>(null); // 用于保存当前编辑的课程
+
 
     return (
         <div id="wd-dashboard">
             <h1 id="wd-dashboard-title">Dashboard</h1>
             <hr/>
 
+            {courses.map((course: any) => (
             <StudentContent>
+
                 <div className="flex float-end">
                     <button className="btn btn-primary float-end"
                             id="wd-add-new-course-click"
@@ -41,46 +46,44 @@ export default function Dashboard() {
                         Enrollments
                     </button>
                 </div>
+
             </StudentContent>
+            ))}
 
-
+            {courses.map((course: any) => (
             <FacultyContent>
+
                 {/*hr for horizontal rule*/}
                 <h5>New Course
-
                     <button className="btn btn-primary float-end"
                             id="wd-add-new-course-click"
-                            onClick={addNewCourse}>
+                            onClick={addCourse}>
                         Add
                     </button>
 
                     <button className="btn btn-warning float-end me-2"
-                            onClick={updateNewCourse} id="wd-update-course-click">
+                            onClick={updateCourse} id="wd-update-course-click">
                         Update
                     </button>
 
                 </h5>
                 <br/>
-                {/*？？？？？？？？这里的course是怎么来得来着*/}
+
                 <input value={course.name} className="form-control mb-2"
                        onChange={(e) => setCourse({...course, name: e.target.value})}/>
                 <textarea value={course.description} className="form-control"
                           onChange={(e) => setCourse({...course, description: e.target.value})}/>
                 <hr/>
             </FacultyContent>
+            ))}
 
 
+            {/*函数主界面*/}
             <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2>
             <hr/>
             <div id="wd-dashboard-courses" className="row">
                 <div className="row row-cols-1 row-cols-md-5 g-4">
-                    {courses.filter((course: any) =>
-                        enrollments.some(
-                            (enrollment : any) =>
-                                enrollment.user === currentUser._id &&
-                                enrollment.course === course._id
-                        ))
-                        .map((course: any) => (
+                    {courses.map((course: any) => (
                             <div className="wd-dashboard-course col" style={{width: "300px"}}>
                                 <div className="card rounded-3 overflow-hidden">
                                     <Link className="wd-dashboard-course-link text-decoration-none text-dark"
