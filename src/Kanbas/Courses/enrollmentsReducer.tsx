@@ -24,7 +24,7 @@ const enrollmentSlice = createSlice({
         deleteEnrollment: (state, {payload: p}) => {
             const user = p.user
             const courseId = p.course
-            state.enrollments = state.enrollments.filter((e: any) => e.course !== courseId && e.user !== user) as any;
+            state.enrollments = state.enrollments.filter((e: any) => (e.course !== courseId) || (e.user !== user)) as any;
         },
     }
 })
