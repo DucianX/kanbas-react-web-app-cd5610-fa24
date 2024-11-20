@@ -7,9 +7,10 @@ import "./styles.css";
 import PeopleTable from "./Courses/People/Table";
 import {useState} from "react";
 import * as db from "./Database";
-import store from "./store";
-import {Provider} from "react-redux";
+// import store from "./store";
+// import {Provider} from "react-redux";
 import ProtectedRoute from "./Account/ProtectedRoute";
+import Session from "./Account/Session";
 
 export default function Kanbas() {
     const [courses, setCourses] = useState(db.courses);
@@ -43,9 +44,10 @@ export default function Kanbas() {
         setCourses(courses.filter((course) => course._id !== courseId));
     };
     return (
-        <Provider store={store}>
 
+        // <Provider store={store}>
 
+            <Session>
             <div id="wd-kanbas">
 
                 <KanbasNavigation/>
@@ -66,7 +68,7 @@ export default function Kanbas() {
                 </div>
 
             </div>
-        </Provider>
-        // 刚写到provider的部分1:53:52。
-    );
+        </Session>
+        // </Provider>
+        );
 }
