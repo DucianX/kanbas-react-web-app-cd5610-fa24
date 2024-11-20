@@ -7,6 +7,8 @@ import { FaPencil } from "react-icons/fa6";
 
 export default function WorkingWithArraysAsynchronously() {
     const [todos, setTodos] = useState<any[]>([]);
+    const [errorMessage, setErrorMessage] = useState(null);
+
     // 在这里只是标记一个正在editing的状态。不用给server知道。
     const editTodo = (todo: any) => {
         const updatedTodos = todos.map(
@@ -14,15 +16,24 @@ export default function WorkingWithArraysAsynchronously() {
         setTodos(updatedTodos);
     };
     const updateTodo = async (todo: any) => {
-        await client.updateTodo(todo); // 一旦得到服务器上确定的答复
-        setTodos(todos.map((t) => (t.id === todo.id ? todo : t))); // 就进行本地的todos的更新
+        try {
+            await client.updateTodo(todo); // 一旦得到服务器上确定的答复
+            setTodos(todos.map((t) => (t.id === todo.id ? todo : t))); // 就进行本地的todos的更新
+        } catch (error: any) {
+            setErrorMessage(error.response.data.message);
+        }
     };
 
     // 这个函数从服务器获取todos，并且将他赋值到本地的state变量里面。
     const deleteTodo = async (todo: any) => {
-        await client.deleteTodo(todo);
-        const newTodos = todos.filter((t) => t.id !== todo.id);
-        setTodos(newTodos);
+        try {
+            await client.deleteTodo(todo);
+            const newTodos = todos.filter((t) => t.id !== todo.id);
+            setTodos(newTodos);
+        } catch (error: any) {
+            console.log(error);
+            setErrorMessage(error.response.data.message);
+        }
     };
 
     const fetchTodos = async () => {
@@ -49,6 +60,8 @@ export default function WorkingWithArraysAsynchronously() {
     return (
         <div id="wd-asynchronous-arrays">
             <h3>Working with Arrays Asynchronously</h3>
+            {/*用&&来保证仅当有errorMessage的时候才渲染*/}
+            {errorMessage && (<div id="wd-todo-error-message" className="alert alert-danger mb-2 mt-2">{errorMessage}</div>)}
             <h4>Todos
                 <FaPlusCircle onClick={createTodo} className="text-success float-end fs-3"
                                     id="wd-create-todo" />
