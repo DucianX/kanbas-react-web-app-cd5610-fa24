@@ -13,7 +13,9 @@ export default function Profile() {
         if (!currentUser) return navigate("/Kanbas/Account/Signin");
         setProfile(currentUser);
     };
-    const signout = () => {
+    const signout = async() => {
+        // 不仅在本地设为null，同时在服务器端登出
+        await client.signout();
         dispatch(setCurrentUser(null));
         navigate("/Kanbas/Account/Signin");
     };

@@ -19,14 +19,15 @@ export default function Dashboard() {
     const [filtered, setFiltered] = useState(false);
     // 检查的是reducer里面的enrollment库有没有当前用户和course交集的记录
 
-
+    // 不再在这里处理course filtering
     const filteredCourses =
         courses.filter((course: { _id: string; }) =>
-            enrollments.some(
-                (enrollment: {user: string; course: string}) =>
-                    enrollment.user === currentUser._id &&
-                    enrollment.course === course._id
-            )
+            // enrollments.some(
+            //     (enrollment: {user: string; course: string}) =>
+            //         enrollment.user === currentUser._id &&
+            //         enrollment.course === course._id
+            // )
+            true
         )
     const dispatch = useDispatch()
     const [course, setCourse] = useState<any>({
@@ -67,7 +68,8 @@ export default function Dashboard() {
                 <h5>New Course
                     <button className="btn btn-primary float-end"
                             id="wd-add-new-course-click"
-                            onClick={() => dispatch(addCourse(course))}>
+                            onClick={() =>
+                                dispatch(addCourse(course))}>
                         Add
                     </button>
 

@@ -5,15 +5,36 @@ import KanbasNavigation from "./Navigation";
 import Courses from "./Courses";
 import "./styles.css";
 import PeopleTable from "./Courses/People/Table";
-import {useState} from "react";
-import * as db from "./Database";
+import {useEffect, useState} from "react";
+// import * as db from "./Database";改为来自服务器
+import * as userClient from "./Account/client";
 // import store from "./store";
 // import {Provider} from "react-redux";
 import ProtectedRoute from "./Account/ProtectedRoute";
 import Session from "./Account/Session";
+import {useSelector} from "react-redux";
 
 export default function Kanbas() {
-    const [courses, setCourses] = useState(db.courses);
+    // courses初始设置为空，前往服务器获取课程
+    const [courses, setCourses] = useState<any[]>([]);
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
+    const fetchCourses = async () => {
+        try {
+            const courses = await userClient.findMyCourses();
+            setCourses(courses);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const addNewCourse = async () => {
+        const newCourse = await userClient.createCourse(course);
+        setCourses([ ...courses, newCourse ]);
+    };
+
+    useEffect(() => {
+        fetchCourses();
+    }, [currentUser]);
 
     const updateCourse = () => {
         setCourses(
@@ -32,13 +53,7 @@ export default function Kanbas() {
         startDate: "2023-09-10", endDate: "2023-12-15",
         image: "/images/reactjs.jpg", description: "New Description"
     });
-    const addNewCourse = () => {
-        const newCourse = {
-            ...course,
-            _id: new Date().getTime().toString()
-        };
-        setCourses([...courses, newCourse]);
-    };
+
 
     const deleteCourse = (courseId: string) => {
         setCourses(courses.filter((course) => course._id !== courseId));
