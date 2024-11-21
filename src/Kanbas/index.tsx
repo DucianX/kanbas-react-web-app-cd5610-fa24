@@ -13,11 +13,12 @@ import * as userClient from "./Account/client";
 import ProtectedRoute from "./Account/ProtectedRoute";
 import Session from "./Account/Session";
 import {useSelector} from "react-redux";
+import * as courseClient from "./Courses/client";
 
 export default function Kanbas() {
     // courses初始设置为空，前往服务器获取课程
     const [courses, setCourses] = useState<any[]>([]);
-    const { currentUser } = useSelector((state: any) => state.accountReducer);
+    const {currentUser} = useSelector((state: any) => state.accountReducer);
     const fetchCourses = async () => {
         try {
             const courses = await userClient.findMyCourses();
@@ -29,14 +30,15 @@ export default function Kanbas() {
 
     const addNewCourse = async () => {
         const newCourse = await userClient.createCourse(course);
-        setCourses([ ...courses, newCourse ]);
+        setCourses([...courses, newCourse]);
     };
 
     useEffect(() => {
         fetchCourses();
     }, [currentUser]);
 
-    const updateCourse = () => {
+    const updateCourse = async () => {
+        await courseClient.updateCourse(course);
         setCourses(
             courses.map((c) => {
                 if (c._id === course._id) {
@@ -55,14 +57,17 @@ export default function Kanbas() {
     });
 
 
-    const deleteCourse = (courseId: string) => {
+    const deleteCourse = async (courseId: string) => {
+        // 如果在远程服务器上移除不成功，那么需要确保在本地上也没有被移除，保持一致
+        const status = await courseClient.deleteCourse(courseId);
         setCourses(courses.filter((course) => course._id !== courseId));
     };
+
     return (
 
         // <Provider store={store}>
 
-            <Session>
+        <Session>
             <div id="wd-kanbas">
 
                 <KanbasNavigation/>
@@ -71,7 +76,7 @@ export default function Kanbas() {
                         <Route path="/" element={<Navigate to="/Kanbas/Account"/>}/>
                         <Route path="/Account/*" element={<Account/>}/>
                         <Route path="/Dashboard" element={<ProtectedRoute><Dashboard
-                            /></ProtectedRoute>
+                        /></ProtectedRoute>
                         }/>
                         <Route path="/Courses/:cid/*"
                                element={<ProtectedRoute><Courses courses={courses}/></ProtectedRoute>}/>
@@ -85,5 +90,5 @@ export default function Kanbas() {
             </div>
         </Session>
         // </Provider>
-        );
+    );
 }
