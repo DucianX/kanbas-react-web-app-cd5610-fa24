@@ -7,8 +7,10 @@ import AssignmentControlButtons from "./AssignmentControlButtons";
 import GroupAssignmentButtons from "./GroupAssignmentButtons";
 import {useSelector, useDispatch}
     from "react-redux";
-import {addAssignment, deleteAssignment} from "./reducer";
+import {setAssignments, addAssignment, deleteAssignment} from "./reducer";
 import AssignmentEditor from "./AssignmentEditor";
+import {useEffect} from "react";
+import * as assignmentClient from "./client";
 
 export default function Assignments() {
     // 使用 useParams 获取课程 ID
@@ -21,13 +23,21 @@ export default function Assignments() {
     const assignments = useSelector((state: any) => state.assignmentReducer).assignments;
 
     // 过滤出当前课程的作业
-    const courseAssignments = assignments.filter((assignment: {
-        course: string | undefined;
-    }) => assignment.course === cid);
+    const courseAssignments = assignments;
 
     const dispatch = useDispatch();
+    const fetchAssignments = async () => {
+        const assignments = await assignmentClient.findAssignmentsForCourse(cid as string);
+        dispatch(setAssignments(assignments));
+    }
+    useEffect(() => {
+        fetchAssignments();
+    }, []);
 
-
+    const deleteAssignmentFromServer = async (assignmentId: string) => {
+        await assignmentClient.deleteAssignment(assignmentId);
+        dispatch(deleteAssignment(assignmentId));
+    }
     return (
         <div id="wd-assignments" className="p-4">
             {/* 搜索框和按钮 */}
@@ -103,7 +113,7 @@ export default function Assignments() {
                         {/* 模块编辑器 */}
                         <AssignmentEditor dialogTitle="Are you sure you wanna delete ?"
                             // 注意此处需要进行一个lambda的写，用dispatch触发重新渲染
-                                          deleteAssignment={() => dispatch(deleteAssignment(assignment._id))}/>
+                                          deleteAssignment={() => deleteAssignmentFromServer(assignment._id)}/>
                     </li>
                 ))}
             </ul>

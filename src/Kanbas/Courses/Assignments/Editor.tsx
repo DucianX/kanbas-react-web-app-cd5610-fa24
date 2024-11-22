@@ -3,6 +3,7 @@ import {addAssignment, updateAssignment, deleteAssignment} from "./reducer";
 import {useSelector, useDispatch}
     from "react-redux";
 import {useState} from "react";
+import * as assignmentClient from "./client";
 
 export default function AssignmentEditor() {
     const assignments = useSelector((state: any) => state.assignmentReducer).assignments;
@@ -26,13 +27,25 @@ export default function AssignmentEditor() {
     const [editedAssignment, setEditedAssignment] = useState(assignment);
     const handleSave = async () => {
         if (isEdit) {
-            dispatch(updateAssignment(editedAssignment));
-        } else {
-            dispatch(addAssignment(editedAssignment));
+            await updateAssignmentOnServer(editedAssignment)
+        }
+        else {
+            await createAssignmentForCourse()
         }
         navigate(`/Kanbas/Courses/${cid}/Assignments`);
     };
 
+    // Why we have type problems here? I used as any, is that okay?
+    const createAssignmentForCourse = async() => {
+        if (!cid) return;
+        const assignmentFromServer = await assignmentClient.createAssignmentForCourse(cid, editedAssignment);
+        dispatch(addAssignment(assignmentFromServer));
+    };
+
+    const updateAssignmentOnServer = async (module: any) => {
+        await assignmentClient.updateAssignment(module);
+        dispatch(updateAssignment(module));
+    };
 
     return (
         // Assignment Name
