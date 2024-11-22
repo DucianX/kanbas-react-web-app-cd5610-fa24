@@ -9,6 +9,7 @@ export default function TOC() {
               </a>
               <a id="wd-github" href="#/Labs" className="nav-link">
                   https://github.com/DucianX/kanbas-react-web-app-cd5610-fa24
+                  https://kanbas-node-server-app-dn90.onrender.com
               </a>
           </li>
           <li className="nav-item">
