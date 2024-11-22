@@ -4,12 +4,14 @@ import FacultyContent from "./Account/FacultyContent";
 import StudentContent from "./Account/StudentContent";
 import {useEffect, useState} from "react";
 import * as coursesClient from "./Courses/client";
+import * as accountClient from "./Account/client";
 import {
     setCourses, addCourse, updateCourse, deleteCourse
 }
     from "./Courses/coursesReducer";
 import {setEnrollments, addEnrollment, deleteEnrollment} from "./Courses/enrollmentsReducer";
 import {fetchAllCourses} from "./Courses/client";
+import {createCourse} from "./Account/client";
 
 
 export default function Dashboard() {
@@ -60,6 +62,11 @@ export default function Dashboard() {
         dispatch(deleteEnrollment({user: currentUser._id, course: courseId}));
     }
 
+    const addCourseToServer = async (course: any) => {
+        await accountClient.createCourse(course);
+        dispatch(addCourse(course));
+    }
+
     return (
         <div id="wd-dashboard">
             <h1 id="wd-dashboard-title">Dashboard</h1>
@@ -84,7 +91,7 @@ export default function Dashboard() {
                     <button className="btn btn-primary float-end"
                             id="wd-add-new-course-click"
                             onClick={() =>
-                                dispatch(addCourse(course))}>
+                                addCourseToServer(course)}>
                         Add
                     </button>
 
