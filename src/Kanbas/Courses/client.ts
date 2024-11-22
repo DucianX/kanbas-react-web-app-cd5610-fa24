@@ -1,4 +1,5 @@
 import axios from "axios";
+import {USERS_API} from "../Account/client";
 const REMOTE_SERVER = process.env.REACT_APP_REMOTE_SERVER;
 // 根据URL里面只有course可以判断这里只和Courses相关。所以在courses的client.ts中安装是合理的
 const COURSES_API = `${REMOTE_SERVER}/api/courses`;
@@ -26,3 +27,7 @@ export const createModuleForCourse = async (courseId: string, module: any) => {
     );
     return response.data;
 };
+export const createEnrollment = async (courseId: string, userId: string) => {
+    const { data } = await axios.post(`${COURSES_API}/${courseId}/createEnrollment`, {userId});
+    return data;
+}

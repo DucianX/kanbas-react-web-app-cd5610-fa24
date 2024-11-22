@@ -3,6 +3,7 @@ import {useSelector, useDispatch} from "react-redux";
 import FacultyContent from "./Account/FacultyContent";
 import StudentContent from "./Account/StudentContent";
 import {useState} from "react";
+import * as coursesClient from "./Courses/client";
 import {
     addCourse, updateCourse, deleteCourse
 }
@@ -20,15 +21,7 @@ export default function Dashboard() {
     // 检查的是reducer里面的enrollment库有没有当前用户和course交集的记录
 
     // 不再在这里处理course filtering
-    const filteredCourses =
-        courses.filter((course: { _id: string; }) =>
-            // enrollments.some(
-            //     (enrollment: {user: string; course: string}) =>
-            //         enrollment.user === currentUser._id &&
-            //         enrollment.course === course._id
-            // )
-            true
-        )
+    const filteredCourses = courses
     const dispatch = useDispatch()
     const [course, setCourse] = useState<any>({
         "_id": "",
@@ -44,6 +37,12 @@ export default function Dashboard() {
     { "_id": "1", "user": "123", "course": "RS101" }
     )
     const variableCourse = filtered ? filteredCourses : courses;
+    const createEnrollmentOnServer = async (courseToEnroll: any) => {
+        console.log(courseToEnroll)
+        console.log(courseToEnroll._id, currentUser._id);
+        await coursesClient.createEnrollment(courseToEnroll._id, currentUser._id);
+        dispatch(addEnrollment({user: currentUser._id, course: courseToEnroll._id}));
+    }
 
     return (
         <div id="wd-dashboard">
@@ -95,7 +94,8 @@ export default function Dashboard() {
             <hr/>
             <div id="wd-dashboard-courses" className="row">
                 <div className="row row-cols-1 row-cols-md-5 g-4">
-                    {variableCourse.map((course: any) => (
+                    {courses.map((course: any) => (
+
                             <div className="wd-dashboard-course col" style={{width: "300px"}}>
                                 <div className="card rounded-3 overflow-hidden">
                                     <Link className="wd-dashboard-course-link text-decoration-none text-dark"
@@ -152,8 +152,10 @@ export default function Dashboard() {
                                                 enrollment.course === course._id
                                                 ) && <button id="wd-edit-course-click"
                                                         onClick={(e) => {
+                                                            setCourse(course);
                                                             e.preventDefault();
-                                                            dispatch(addEnrollment({user: currentUser._id, course: course._id}));
+                                                            // 要在map的上下文里传递这个course参数
+                                                            createEnrollmentOnServer(course);
                                                         }
                                                         }
                                                         className="btn btn-warning me-2 float-end">
