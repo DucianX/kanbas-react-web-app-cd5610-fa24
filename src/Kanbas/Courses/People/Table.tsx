@@ -3,7 +3,8 @@ import {useParams} from "react-router-dom";
 import * as db from "../../Database";
 import {FaUserCircle} from "react-icons/fa";
 import { users, enrollments } from "../../Database";
-
+// 思路：用DAO-Routes-client-index链路，
+// 从服务器抓取最新的users和enrollments放在reducer里面，用他来动态更新这里的数据
 export default function PeopleTable() {
   const {cid} = useParams();
   // @ts-ignore

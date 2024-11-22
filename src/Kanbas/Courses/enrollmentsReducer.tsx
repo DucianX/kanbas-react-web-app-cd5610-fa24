@@ -4,7 +4,7 @@ import {enrollments} from "../Database";
 
 
 const enrollmentsInitialState = {
-    enrollments: enrollments,
+    enrollments: [],
 }
 
 
@@ -12,6 +12,9 @@ const enrollmentSlice = createSlice({
     name: "enrollments",
     initialState: enrollmentsInitialState,
     reducers: {
+        setEnrollments: (state, action) => {
+            state.enrollments = action.payload;
+        },
         addEnrollment: (state, {payload: p}) => {
             const newEnrollment: any = {
                 _id: new Date().getTime().toString(),
@@ -28,7 +31,7 @@ const enrollmentSlice = createSlice({
         },
     }
 })
-
-export const {addEnrollment, deleteEnrollment} = enrollmentSlice.actions;
+// setEnrollments的作用：需要在每一次访问dashboard的时候从server拿回最新数据，放在reducer里面，保证他们的同步
+export const {setEnrollments, addEnrollment, deleteEnrollment} = enrollmentSlice.actions;
 export default enrollmentSlice.reducer;
 

@@ -2,19 +2,32 @@ import {Link} from "react-router-dom";
 import {useSelector, useDispatch} from "react-redux";
 import FacultyContent from "./Account/FacultyContent";
 import StudentContent from "./Account/StudentContent";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import * as coursesClient from "./Courses/client";
 import {
-    addCourse, updateCourse, deleteCourse
+    setCourses, addCourse, updateCourse, deleteCourse
 }
     from "./Courses/coursesReducer";
-import {addEnrollment, deleteEnrollment} from "./Courses/enrollmentsReducer";
+import {setEnrollments, addEnrollment, deleteEnrollment} from "./Courses/enrollmentsReducer";
+import {fetchAllCourses} from "./Courses/client";
 
 
 export default function Dashboard() {
     const {courses} = useSelector((state: any) => state.coursesReducer);
     const {currentUser} = useSelector((state: any) => state.accountReducer);
     const {enrollments} = useSelector((state: any) => state.enrollmentsReducer);
+    const fetchCourses = async () => {
+        const courses = await coursesClient.fetchAllCourses();
+        dispatch(setCourses(courses));
+    };
+    const fetchEnrollments = async () => {
+        const enrollments = await coursesClient.getAllEnrollment();
+        dispatch(setEnrollments(enrollments));
+    }
+    useEffect(() => {
+        fetchCourses();
+        fetchEnrollments();
+    }, []);
 
     // 我们只需要设置一个filter，把没有注册的course都过滤掉
     const [filtered, setFiltered] = useState(false);
@@ -38,10 +51,13 @@ export default function Dashboard() {
     )
     const variableCourse = filtered ? filteredCourses : courses;
     const createEnrollmentOnServer = async (courseToEnroll: any) => {
-        console.log(courseToEnroll)
-        console.log(courseToEnroll._id, currentUser._id);
         await coursesClient.createEnrollment(courseToEnroll._id, currentUser._id);
         dispatch(addEnrollment({user: currentUser._id, course: courseToEnroll._id}));
+    }
+
+    const deleteEnrollmentOnServer = async (courseId: string) => {
+        await coursesClient.deleteEnrollment(courseId, currentUser._id);
+        dispatch(deleteEnrollment({user: currentUser._id, course: courseId}));
     }
 
     return (
@@ -140,7 +156,7 @@ export default function Dashboard() {
                                                         enrollment.course === course._id
                                                 ) && <button onClick={(e) => {
                                                     e.preventDefault();
-                                                    dispatch(deleteEnrollment({user: currentUser._id, course: course._id}));
+                                                    deleteEnrollmentOnServer(course._id);
                                                 }} className="btn btn-danger float-end"
                                                         id="wd-delete-course-click">
                                                      Unenroll

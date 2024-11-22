@@ -2,7 +2,7 @@ import {courses} from "../Database";
 import {createSlice} from "@reduxjs/toolkit";
 
 const coursesInitialState = {
-    courses: courses,
+    courses: [],
 }
 
 const courseSlice = createSlice({
@@ -32,9 +32,11 @@ const courseSlice = createSlice({
             state.courses = state.courses.filter(
                 (c: any) => c._id !== courseId);
         },
-
+        setCourses: (state, {payload: courses}) => {
+            state.courses = courses;
+        },
     }
 });
 
-export const {addCourse, updateCourse, deleteCourse} = courseSlice.actions;
+export const {setCourses, addCourse, updateCourse, deleteCourse} = courseSlice.actions;
 export default courseSlice.reducer;

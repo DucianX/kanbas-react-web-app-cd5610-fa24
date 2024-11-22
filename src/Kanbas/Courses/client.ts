@@ -31,3 +31,14 @@ export const createEnrollment = async (courseId: string, userId: string) => {
     const { data } = await axios.post(`${COURSES_API}/${courseId}/createEnrollment`, {userId});
     return data;
 }
+
+export const deleteEnrollment = async (courseId: string, userId: string) => {
+    const { data } = await axios.post(`${COURSES_API}/${courseId}/deleteEnrollment`, {userId});
+    return data;
+}
+
+// 需要在每一次访问dashboard的时候从server拿回最新数据，放在reducer里面，保证他们的同步
+export const getAllEnrollment = async () => {
+    const { data } = await axios.get(`${COURSES_API}/getEnrollments`);
+    return data;
+}
