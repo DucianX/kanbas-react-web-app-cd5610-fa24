@@ -23,7 +23,7 @@ export default function Dashboard() {
         dispatch(setCourses(courses));
     };
     const fetchEnrolledCourses = async () => {
-        const courses = await coursesClient.getEnrolledCourses();
+        const courses = await coursesClient.getEnrolledCourses(currentUser._id);
         dispatch(setCourses(courses));
     };
 
@@ -38,7 +38,7 @@ export default function Dashboard() {
     }, []);
 
     // 我们只需要设置一个filter，把没有注册的course都过滤掉
-    const [filtered, setFiltered] = useState(false);
+    const [filtered, setFiltered] = useState(true);
     // 检查的是reducer里面的enrollment库有没有当前用户和course交集的记录
 
     // 不再在这里处理course filtering

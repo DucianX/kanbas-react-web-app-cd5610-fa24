@@ -43,7 +43,7 @@ export const getAllEnrollment = async () => {
     return data;
 }
 
-export const getEnrolledCourses = async () => {
-    const { data } = await axios.get(`${COURSES_API}/getEnrolledCourses`);
+export const getEnrolledCourses = async (userId: string) => {
+    const { data } = await axios.post(`${COURSES_API}/getEnrolledCourses`, { userId });
     return data;
 }
