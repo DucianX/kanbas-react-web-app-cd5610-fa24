@@ -27,6 +27,7 @@ const assignmentSlice = createSlice({
             state.assignments = state.assignments.filter(
                 (a: any) => a._id !== assignmentId);
         },
+        // 传入：assignment。找到那个符合id的assignment，并且替换
         updateAssignment: (state, {payload: assignment}) => {
             state.assignments = state.assignments.map((a: any) =>
                 a._id === assignment._id ? assignment : a) as any;

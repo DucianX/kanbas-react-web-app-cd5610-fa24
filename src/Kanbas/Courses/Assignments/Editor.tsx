@@ -48,6 +48,7 @@ export default function AssignmentEditor() {
     };
 
     return (
+        // 整个assignment编辑器从这开始
         // Assignment Name
         <div id="wd-assignments-editor" className="container p-4 flex-end">
             {/* Assignment Name */}

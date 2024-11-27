@@ -42,3 +42,8 @@ export const getAllEnrollment = async () => {
     const { data } = await axios.get(`${COURSES_API}/getEnrollments`);
     return data;
 }
+
+export const getEnrolledCourses = async () => {
+    const { data } = await axios.get(`${COURSES_API}/getEnrolledCourses`);
+    return data;
+}

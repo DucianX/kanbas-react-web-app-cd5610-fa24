@@ -22,6 +22,12 @@ export default function Dashboard() {
         const courses = await coursesClient.fetchAllCourses();
         dispatch(setCourses(courses));
     };
+    const fetchEnrolledCourses = async () => {
+        const courses = await coursesClient.getEnrolledCourses();
+        dispatch(setCourses(courses));
+    };
+
+
     const fetchEnrollments = async () => {
         const enrollments = await coursesClient.getAllEnrollment();
         dispatch(setEnrollments(enrollments));
@@ -73,10 +79,17 @@ export default function Dashboard() {
             <hr/>
 
             <StudentContent>
+                {/*点击切换对于当前用户全部可录入课程/已经录入课程的蓝色小按钮*/}
                 <div className="flex float-end">
                     <button className="btn btn-primary float-end"
                             id="wd-add-new-course-click"
-                            onClick = {() => setFiltered(!filtered)}
+                            onClick = {() => {
+                                setFiltered(!filtered);
+                                if  (!filtered) {
+                                    fetchCourses();
+                                } else {
+                                    fetchEnrolledCourses();
+                            }}}
                         >
                         Enrollments
                     </button>
@@ -157,6 +170,7 @@ export default function Dashboard() {
 
                                             {/*学生能看到的按钮*/}
                                             <StudentContent>
+                                                {/*unenroll按钮，只当enrollment里面没有的时候才出现*/}
                                                 {enrollments.some(
                                                     (enrollment: {user: string; course: string}) =>
                                                         enrollment.user === currentUser._id &&
@@ -169,6 +183,7 @@ export default function Dashboard() {
                                                      Unenroll
                                                 </button>}
 
+                                                {/*enroll按钮，同理*/}
                                                 {!enrollments.some(
                                                 (enrollment: {user: string; course: string}) =>
                                                 enrollment.user === currentUser._id &&
