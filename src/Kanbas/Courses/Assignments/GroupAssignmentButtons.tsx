@@ -20,7 +20,7 @@ export default function GroupAssignmentButtons() {
                 </button>
 
                 {/*添加作业按钮*/}
-                <Link to = {`/Kanbas/Courses/${cid}/Assignments/New`}>
+                <Link to = {`/Kanbas/Courses/${cid}/Assignments/${new Date().getTime().toString()}`}>
                     <button
                         id="wd-add-assignment-btn"
                         className="btn btn-lg btn-danger"

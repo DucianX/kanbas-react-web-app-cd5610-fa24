@@ -13,7 +13,7 @@ export default function AssignmentEditor() {
     const isEdit = assignments.findIndex((a: any) => a._id === aid) !== -1;
     const assignment = assignments.find((assignment: { _id: string; course: string; }) =>
         assignment._id === aid && assignment.course === cid) || {
-        _id: Date.now(),
+        _id: aid,
         title: "",
         description: "",
         points: 100,
