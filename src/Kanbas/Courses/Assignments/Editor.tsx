@@ -9,11 +9,11 @@ export default function AssignmentEditor() {
     const assignments = useSelector((state: any) => state.assignmentReducer).assignments;
     const {cid, aid} = useParams();
     const navigate = useNavigate();
-    // 按照当前cid aid进行过滤
+    // isEdit:若能在assignments里找到当前的assignmentID，则判定为edit
     const isEdit = assignments.findIndex((a: any) => a._id === aid) !== -1;
     const assignment = assignments.find((assignment: { _id: string; course: string; }) =>
         assignment._id === aid && assignment.course === cid) || {
-        _id: aid,
+        _id: Date.now(),
         title: "",
         description: "",
         points: 100,
@@ -25,26 +25,27 @@ export default function AssignmentEditor() {
 
     const dispatch = useDispatch();
     const [editedAssignment, setEditedAssignment] = useState(assignment);
+    // 处理Save按钮的逻辑，如果正在编辑，调用update方法，如果正在创建，调用create方法
     const handleSave = async () => {
         if (isEdit) {
             await updateAssignmentOnServer(editedAssignment)
         }
         else {
-            await createAssignmentForCourse()
+            await createAssignmentForCourse(editedAssignment)
         }
         navigate(`/Kanbas/Courses/${cid}/Assignments`);
     };
 
     // Why we have type problems here? I used as any, is that okay?
-    const createAssignmentForCourse = async() => {
+    const createAssignmentForCourse = async(assignment: any) => {
         if (!cid) return;
-        const assignmentFromServer = await assignmentClient.createAssignmentForCourse(cid, editedAssignment);
+        const assignmentFromServer = await assignmentClient.createAssignmentForCourse(cid, assignment);
         dispatch(addAssignment(assignmentFromServer));
     };
 
-    const updateAssignmentOnServer = async (module: any) => {
-        await assignmentClient.updateAssignment(module);
-        dispatch(updateAssignment(module));
+    const updateAssignmentOnServer = async (assignment: any) => {
+        await assignmentClient.updateAssignment(assignment);
+        dispatch(updateAssignment(assignment));
     };
 
     return (
