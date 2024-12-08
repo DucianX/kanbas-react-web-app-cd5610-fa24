@@ -4,8 +4,9 @@ import {useLocation} from "react-router";
 
 export default function AccountNavigation() {
     const { currentUser } = useSelector((state: any) => state.accountReducer);
-    const links = currentUser != null ? ["Profile"] : ["Signin", "Signup"];
+    const links = currentUser ? ["Profile"] : ["Signin", "Signup"];
     const { pathname } = useLocation();
+    const active = (path: string) => (pathname.includes(path) ? "active" : "");
 
   return (
 
@@ -21,6 +22,8 @@ export default function AccountNavigation() {
                 {link}
             </Link>
         ))}
+        {currentUser && currentUser.role === "ADMIN" && (
+            <Link to={`/Kanbas/Account/Users`} className={`list-group-item border-white ${active("Users")}`}> Users </Link> )}
 
       {/*  /!* Signin (Active) *!/*/}
       {/*<div className="list-group-item active text-dark border-0">*/}
