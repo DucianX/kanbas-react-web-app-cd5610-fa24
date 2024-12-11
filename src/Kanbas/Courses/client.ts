@@ -1,7 +1,7 @@
 import axios from "axios";
+import {USERS_API} from "../Account/client";
 const axiosWithCredentials = axios.create({ withCredentials: true });
 
-import {USERS_API} from "../Account/client";
 const REMOTE_SERVER = process.env.REACT_APP_REMOTE_SERVER;
 // 根据URL里面只有course可以判断这里只和Courses相关。所以在courses的client.ts中安装是合理的
 const COURSES_API = `${REMOTE_SERVER}/api/courses`;

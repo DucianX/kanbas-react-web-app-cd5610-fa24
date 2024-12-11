@@ -12,8 +12,6 @@ import {
 import {setEnrollments, addEnrollment, deleteEnrollment} from "./Courses/enrollmentsReducer";
 import {fetchAllCourses} from "./Courses/client";
 import {createCourse} from "./Account/client";
-
-
 export default function Dashboard() {
     const {courses} = useSelector((state: any) => state.coursesReducer);
     const {currentUser} = useSelector((state: any) => state.accountReducer);
@@ -71,6 +69,11 @@ export default function Dashboard() {
     const addCourseToServer = async (course: any) => {
         await accountClient.createCourse(course);
         dispatch(addCourse(course));
+    }
+
+    const handleDeleteCourse = async (courseId: string) => {
+        await coursesClient.deleteCourse(courseId);
+        dispatch(deleteCourse(courseId));
     }
 
     return (
@@ -152,6 +155,7 @@ export default function Dashboard() {
                                             <FacultyContent>
                                                 <button onClick={(event) => {
                                                     event.preventDefault();
+                                                    handleDeleteCourse(course._id);
                                                     dispatch(deleteCourse(course._id));
                                                 }} className="btn btn-danger float-end"
                                                         id="wd-delete-course-click">
