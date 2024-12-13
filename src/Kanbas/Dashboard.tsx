@@ -10,31 +10,56 @@ import {
 }
     from "./Courses/coursesReducer";
 import {setEnrollments, addEnrollment, deleteEnrollment} from "./Courses/enrollmentsReducer";
-import {fetchAllCourses} from "./Courses/client";
-import {createCourse} from "./Account/client";
-export default function Dashboard({enrolling, setEnrolling }
-                                      : { enrolling: boolean; setEnrolling: (enrolling: boolean) => void;}) {
+import * as userClient from "./Account/client";
+
+
+export default function Dashboard({ enrolling, setEnrolling }
+                                      : { enrolling: boolean; setEnrolling: (enrolling: boolean) => void }) {
     const {courses} = useSelector((state: any) => state.coursesReducer);
     const {currentUser} = useSelector((state: any) => state.accountReducer);
     const {enrollments = []} = useSelector((state: any) => state.enrollmentsReducer);
 
+    // 添加的内容：
+    const [showAllCourses, setShowAllCourses] = useState(false);
+    const isFaculty = currentUser.role === "FACULTY";
+    const isStudent = currentUser.role == "STUDENT";
+
+    // 返回所有课程
     const fetchCourses = async () => {
         const courses = await coursesClient.fetchAllCourses();
         dispatch(setCourses(courses));
     };
+    // 返回当前用户录入了的课程
     const fetchEnrolledCourses = async () => {
         const courses = await coursesClient.getEnrolledCourses(currentUser._id);
         dispatch(setCourses(courses));
     };
 
+    // 旧的方法
+    // const fetchEnrollments = async () => {
+    //     const enrollments = await coursesClient.getAllEnrollment();
+    //     dispatch(setEnrollments(enrollments));
+    // }
 
-    const fetchEnrollments = async () => {
-        const enrollments = await coursesClient.getAllEnrollment();
-        dispatch(setEnrollments(enrollments));
-    }
+    const updateEnrollment = async (courseId: string, enrolled: boolean) => {
+        if (enrolled) {
+            await userClient.enrollIntoCourse(currentUser._id, courseId);
+        } else {
+            await userClient.unenrollFromCourse(currentUser._id, courseId);
+        }
+        dispatch(setCourses(
+            courses.map((course: any) => {
+                if (course._id === courseId) {
+                    return { ...course, enrolled: enrolled };
+                } else {
+                    return course;
+                }
+            })
+        ));
+    };
     useEffect(() => {
         fetchCourses();
-        fetchEnrollments();
+        // fetchEnrollments();
     }, []);
 
     // 我们只需要设置一个filter，把没有注册的course都过滤掉
@@ -44,29 +69,43 @@ export default function Dashboard({enrolling, setEnrolling }
     // 不再在这里处理course filtering
     const filteredCourses = courses
     const dispatch = useDispatch()
-    const [course, setCourse] = useState<any>({
-        "_id": "",
-        "name": "",
-        "number": "",
-        "startDate": "",
-        "endDate": "",
-        "department": "",
-        "credits": 0,
-        "description": ""
-    });
-    const [enrollment, setEnrollment] = useState<any>(
-    { "_id": "1", "user": "123", "course": "RS101" }
-    )
-    const variableCourse = filtered ? filteredCourses : courses;
-    const createEnrollmentOnServer = async (courseToEnroll: any) => {
-        await coursesClient.createEnrollment(courseToEnroll._id, currentUser._id);
-        dispatch(addEnrollment({user: currentUser._id, course: courseToEnroll._id}));
-    }
 
-    const deleteEnrollmentOnServer = async (courseId: string) => {
-        await coursesClient.deleteEnrollment(courseId, currentUser._id);
-        dispatch(deleteEnrollment({user: currentUser._id, course: courseId}));
-    }
+    // 新的schema
+    const [course, setCourse] = useState<any>({
+        _id: "0", name: "New Course", number: "New Number",
+        startDate: "2023-09-10", endDate: "2023-12-15",
+        image: "/images/reactjs.jpg", description: "New Description",  enrolled: false
+    });
+    // 旧schema
+    //
+    // const [course, setCourse] = useState<any>({
+    //     "_id": "",
+    //     "name": "",
+    //     "number": "",
+    //     "startDate": "",
+    //     "endDate": "",
+    //     "department": "",
+    //     "credits": 0,
+    //     "description": ""
+    // });
+
+    // enrollment（用多对多的关系已经替代）
+    // const [enrollment, setEnrollment] = useState<any>(
+    //     {"_id": "1", "user": "123", "course": "RS101"}
+    // )
+
+    // 被替代的course变量
+    // const variableCourse = filtered ? filteredCourses : courses;
+
+    // const createEnrollmentOnServer = async (courseToEnroll: any) => {
+    //     await coursesClient.createEnrollment(courseToEnroll._id, currentUser._id);
+    //     dispatch(addEnrollment({user: currentUser._id, course: courseToEnroll._id}));
+    // }
+    //
+    // const deleteEnrollmentOnServer = async (courseId: string) => {
+    //     await coursesClient.deleteEnrollment(courseId, currentUser._id);
+    //     dispatch(deleteEnrollment({user: currentUser._id, course: courseId}));
+    // }
 
     const addCourseToServer = async (course: any) => {
         await accountClient.createCourse(course);
@@ -83,8 +122,21 @@ export default function Dashboard({enrolling, setEnrolling }
         await coursesClient.updateCourse(course);
     }
 
+    const handleToggleEnrollment = async (course: any, enrolled: boolean) => {
+        try{
+            await updateEnrollment(course._id, enrolled);
+
+            const updatedCourse = {...course, enrolled};
+            dispatch(updateCourse(updatedCourse));
+        }
+        catch (error) {
+            console.error("Failed to toggle enrollment:", error);
+        }
+    }
+
     return (
         <div id="wd-dashboard">
+            {/*切换当前enroll的课程和全部课程的按钮*/}
             <h1 id="wd-dashboard-title">Dashboard <button onClick={() => setEnrolling(!enrolling)}
                                                           className="float-end btn btn-primary">
                 {enrolling ? "My Courses" : "All Courses"}
@@ -92,24 +144,26 @@ export default function Dashboard({enrolling, setEnrolling }
             </h1>
             <hr/>
 
-            <StudentContent>
-                {/*点击切换对于当前用户全部可录入课程/已经录入课程的蓝色小按钮*/}
-                <div className="flex float-end">
-                <button className="btn btn-primary float-end"
-                            id="wd-add-new-course-click"
-                            onClick = {() => {
-                                setFiltered(!filtered);
-                                if  (!filtered) {
-                                    fetchCourses();
-                                } else {
-                                    fetchEnrolledCourses();
-                            }}}
-                        >
-                        Enrollments
-                    </button>
-                </div>
+            {/*不再采用enrollments*/}
+            {/*<StudentContent>*/}
+            {/*    /!*点击切换对于当前用户全部可录入课程/已经录入课程的蓝色小按钮*!/*/}
+            {/*    <div className="flex float-end">*/}
+            {/*        <button className="btn btn-primary float-end"*/}
+            {/*                id="wd-add-new-course-click"*/}
+            {/*                onClick={() => {*/}
+            {/*                    setFiltered(!filtered);*/}
+            {/*                    if (!filtered) {*/}
+            {/*                        fetchCourses();*/}
+            {/*                    } else {*/}
+            {/*                        fetchEnrolledCourses();*/}
+            {/*                    }*/}
+            {/*                }}*/}
+            {/*        >*/}
+            {/*            Enrollments*/}
+            {/*        </button>*/}
+            {/*    </div>*/}
 
-            </StudentContent>
+            {/*</StudentContent>*/}
 
             <FacultyContent>
                 {/*给教职工用的增改courses按钮*/}
@@ -123,8 +177,10 @@ export default function Dashboard({enrolling, setEnrolling }
                     </button>
 
                     <button className="btn btn-warning float-end me-2"
-                            onClick={() => {dispatch(updateCourse(course));
-                                handleEditCourse(course);}} id="wd-update-course-click">
+                            onClick={() => {
+                                dispatch(updateCourse(course));
+                                handleEditCourse(course);
+                            }} id="wd-update-course-click">
                         Update
                     </button>
 
@@ -139,94 +195,101 @@ export default function Dashboard({enrolling, setEnrolling }
             </FacultyContent>
 
 
-
             {/*函数主界面*/}
             <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2>
             <hr/>
             <div id="wd-dashboard-courses" className="row">
+                {/*渲染所有课程*/}
                 <div className="row row-cols-1 row-cols-md-5 g-4">
                     {courses.map((course: any) => (
 
-                            <div className="wd-dashboard-course col" style={{width: "300px"}}>
-                                <div className="card rounded-3 overflow-hidden">
-                                    <Link className="wd-dashboard-course-link text-decoration-none text-dark"
-                                          to={`/Kanbas/Courses/${course._id}/Home`}>
-                                        <img src="/images/reactjs.jpg" width="100%" height={160}/>
-                                        <div className="card-body">
-                                            <h5 className="wd-dashboard-course-title card-title">
-                                                {enrolling && (
-                                                    <button className={`btn ${ course.enrolled ? "btn-danger" : "btn-success" } float-end`} >
-                                                        {course.enrolled ? "Unenroll" : "Enroll"}
-                                                    </button>
-                                                )}
-                                                {course.name}
-                                            </h5>
-                                            <p className="wd-dashboard-course-title card-text overflow-y-hidden"
-                                               style={{maxHeight: 100}}>
-                                                {course.description}
-                                            </p>
-                                            <button className="btn btn-primary"> Go</button>
+                        <div className="wd-dashboard-course col" style={{width: "300px"}}>
+                            <div className="card rounded-3 overflow-hidden">
+                                <Link className="wd-dashboard-course-link text-decoration-none text-dark"
+                                      to={`/Kanbas/Courses/${course._id}/Home`}>
+                                    <img src="/images/reactjs.jpg" width="100%" height={160}/>
 
-
-                                            {/*这里是教职工才能看到的按钮*/}
-                                            <FacultyContent>
+                                    {/*课程渲染组件*/}
+                                    <div className="card-body">
+                                        <h5 className="wd-dashboard-course-title card-title">
+                                            {/*enroll按钮*/}
+                                            { enrolling && (
                                                 <button onClick={(event) => {
                                                     event.preventDefault();
-                                                    handleDeleteCourse(course._id);
-                                                    dispatch(deleteCourse(course._id));
-                                                }} className="btn btn-danger float-end"
-                                                        id="wd-delete-course-click">
-                                                    Delete
+                                                    updateEnrollment(course._id, !course.enrolled);
+                                                }}
+                                                    className={`btn ${course.enrolled ? "btn-danger" : "btn-success"} float-end`}>
+                                                    {course.enrolled ? "Unenroll" : "Enroll"}
                                                 </button>
+                                            )}
+                                            {course.name}
+                                        </h5>
+                                        <p className="wd-dashboard-course-title card-text overflow-y-hidden"
+                                           style={{maxHeight: 100}}>
+                                            {course.description}
+                                        </p>
+                                        <button className="btn btn-primary"> Go</button>
 
-                                                <button id="wd-edit-course-click"
-                                                        onClick={(event) => {
-                                                            event.preventDefault();
 
-                                                            setCourse(course);
-                                                        }}
-                                                        className="btn btn-warning me-2 float-end">
-                                                    Edit
-                                                </button>
-                                            </FacultyContent>
+                                        {/*这里是教职工才能看到的按钮*/}
+                                        <FacultyContent>
+                                            <button onClick={(event) => {
+                                                event.preventDefault();
+                                                handleDeleteCourse(course._id);
+                                                dispatch(deleteCourse(course._id));
+                                            }} className="btn btn-danger float-end"
+                                                    id="wd-delete-course-click">
+                                                Delete
+                                            </button>
 
-                                            {/*学生能看到的按钮*/}
-                                            <StudentContent>
-                                                {/*unenroll按钮，只当enrollment里面没有的时候才出现*/}
-                                                {enrollments.find(
-                                                    (enrollment: {user: string; course: string}) =>
-                                                        enrollment.user === currentUser._id &&
-                                                        enrollment.course === course._id
-                                                ) && <button onClick={(e) => {
-                                                    e.preventDefault();
-                                                    deleteEnrollmentOnServer(course._id);
-                                                }} className="btn btn-danger float-end"
-                                                        id="wd-delete-course-click">
-                                                     Unenroll
-                                                </button>}
+                                            <button id="wd-edit-course-click"
+                                                    onClick={(event) => {
+                                                        event.preventDefault();
 
-                                                {/*enroll按钮，同理*/}
-                                                {!enrollments.find(
-                                                (enrollment: {user: string; course: string}) =>
-                                                enrollment.user === currentUser._id &&
-                                                enrollment.course === course._id
-                                                ) && <button id="wd-edit-course-click"
-                                                        onClick={(e) => {
-                                                            setCourse(course);
-                                                            e.preventDefault();
-                                                            // 要在map的上下文里传递这个course参数
-                                                            createEnrollmentOnServer(course);
-                                                        }
-                                                        }
-                                                        className="btn btn-warning me-2 float-end">
-                                                    Enroll
-                                                </button>}
-                                            </StudentContent>
+                                                        setCourse(course);
+                                                    }}
+                                                    className="btn btn-warning me-2 float-end">
+                                                Edit
+                                            </button>
+                                        </FacultyContent>
 
-                                        </div>
-                                    </Link>
-                                </div>
+                                        {/*学生能看到的按钮*/}
+                                        {/*<StudentContent>*/}
+                                        {/*    /!*unenroll按钮，只当enrollment里面没有的时候才出现*!/*/}
+                                        {/*    {enrollments.find(*/}
+                                        {/*        (enrollment: { user: string; course: string }) =>*/}
+                                        {/*            enrollment.user === currentUser._id &&*/}
+                                        {/*            enrollment.course === course._id*/}
+                                        {/*    ) && <button onClick={(e) => {*/}
+                                        {/*        e.preventDefault();*/}
+                                        {/*        deleteEnrollmentOnServer(course._id);*/}
+                                        {/*    }} className="btn btn-danger float-end"*/}
+                                        {/*                 id="wd-delete-course-click">*/}
+                                        {/*        Unenroll*/}
+                                        {/*    </button>}*/}
+
+                                        {/*    /!*enroll按钮,现已经被代替*!/*/}
+                                        {/*    /!*{!enrollments.find(*!/*/}
+                                        {/*    /!*    (enrollment: { user: string; course: string }) =>*!/*/}
+                                        {/*    /!*        enrollment.user === currentUser._id &&*!/*/}
+                                        {/*    /!*        enrollment.course === course._id*!/*/}
+                                        {/*    /!*) && <button id="wd-edit-course-click"*!/*/}
+                                        {/*    /!*             onClick={(e) => {*!/*/}
+                                        {/*    /!*                 setCourse(course);*!/*/}
+                                        {/*    /!*                 e.preventDefault();*!/*/}
+                                        {/*    /!*                 // 要在map的上下文里传递这个course参数*!/*/}
+                                        {/*    /!*                 createEnrollmentOnServer(course);*!/*/}
+                                        {/*    /!*             }*!/*/}
+                                        {/*    /!*             }*!/*/}
+                                        {/*    /!*             className="btn btn-warning me-2 float-end">*!/*/}
+                                        {/*    /!*    Enroll*!/*/}
+                                        {/*    /!*</button>}*!/*/}
+                                        {/*</StudentContent>*/}
+
+                                    </div>
+                                </Link>
                             </div>
+                        </div>
 
 
                     ))}

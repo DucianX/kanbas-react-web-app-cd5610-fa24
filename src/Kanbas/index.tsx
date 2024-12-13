@@ -12,7 +12,7 @@ import {useEffect, useState} from "react";
 // import {Provider} from "react-redux";
 import ProtectedRoute from "./Account/ProtectedRoute";
 import Session from "./Account/Session";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import * as courseClient from "./Courses/client";
 
 export default function Kanbas() {
@@ -69,6 +69,7 @@ export default function Kanbas() {
         }
     }, [currentUser, enrolling]);
 
+
     const updateCourse = async () => {
         await courseClient.updateCourse(course);
         setCourses(
@@ -85,7 +86,7 @@ export default function Kanbas() {
     const [course, setCourse] = useState<any>({
         _id: "0", name: "New Course", number: "New Number",
         startDate: "2023-09-10", endDate: "2023-12-15",
-        image: "/images/reactjs.jpg", description: "New Description"
+        image: "/images/reactjs.jpg", description: "New Description", enrolled: false
     });
 
 
@@ -94,6 +95,24 @@ export default function Kanbas() {
         const status = await courseClient.deleteCourse(courseId);
         setCourses(courses.filter((course) => course._id !== courseId));
     };
+
+    // 当已经录入了course，就unenroll，反之亦然
+    // const updateEnrollment = async (courseId: string, enrolled: boolean) => {
+    //     if (enrolled) {
+    //         await userClient.enrollIntoCourse(currentUser._id, courseId);
+    //     } else {
+    //         await userClient.unenrollFromCourse(currentUser._id, courseId);
+    //     }
+    //     (setCourses(
+    //         courses.map((course) => {
+    //             if (course._id === courseId) {
+    //                 return { ...course, enrolled: enrolled };
+    //             } else {
+    //                 return course;
+    //             }
+    //         })
+    //     ));
+    // };
 
     return (
 
@@ -108,7 +127,7 @@ export default function Kanbas() {
                         <Route path="/" element={<Navigate to="/Kanbas/Account"/>}/>
                         <Route path="/Account/*" element={<Account/>}/>
                         <Route path="/Dashboard" element={<ProtectedRoute><Dashboard enrolling={enrolling} setEnrolling={setEnrolling}
-                        /></ProtectedRoute>
+                                                                                     /></ProtectedRoute>
                         }/>
                         <Route path="/Courses/:cid/*"
                                element={<ProtectedRoute><Courses courses={courses}/></ProtectedRoute>}/>

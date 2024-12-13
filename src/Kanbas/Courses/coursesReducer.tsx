@@ -19,6 +19,7 @@ const courseSlice = createSlice({
                 department: a.department,
                 credits: a.credits,
                 description: a.description,
+                enrolled: false,
             };
             state.courses = [...state.courses, newCourse] as any;
         },
