@@ -27,6 +27,8 @@ export default function Dashboard({ enrolling, setEnrolling }
     // 返回所有课程
     const fetchCourses = async () => {
         const courses = await coursesClient.fetchAllCourses();
+        const filteredCourses: any[] = courses.filter((c:any) => c.enrolled)
+        setEnrolledCourses(filteredCourses);
         dispatch(setCourses(courses));
     };
     // 返回当前用户录入了的课程
@@ -44,8 +46,15 @@ export default function Dashboard({ enrolling, setEnrolling }
     const updateEnrollment = async (courseId: string, enrolled: boolean) => {
         if (enrolled) {
             await userClient.enrollIntoCourse(currentUser._id, courseId);
+            setEnrolledCourses((prev) => [
+                ...prev,
+                courses.find((course: any) => course._id === courseId),
+            ]);
         } else {
             await userClient.unenrollFromCourse(currentUser._id, courseId);
+            setEnrolledCourses((prev) =>
+                prev.filter((course: any) => course._id !== courseId)
+            );
         }
         dispatch(setCourses(
             courses.map((course: any) => {
@@ -70,6 +79,8 @@ export default function Dashboard({ enrolling, setEnrolling }
     const filteredCourses = courses
     const dispatch = useDispatch()
 
+    // 处理enrolled的courses
+    const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
     // 新的schema
     const [course, setCourse] = useState<any>({
         _id: "0", name: "New Course", number: "New Number",
@@ -121,6 +132,7 @@ export default function Dashboard({ enrolling, setEnrolling }
         dispatch(updateCourse(course));
         await coursesClient.updateCourse(course);
     }
+    const visibleCourses = (enrolling ? courses : enrolledCourses);
 
     const handleToggleEnrollment = async (course: any, enrolled: boolean) => {
         try{
@@ -201,7 +213,7 @@ export default function Dashboard({ enrolling, setEnrolling }
             <div id="wd-dashboard-courses" className="row">
                 {/*渲染所有课程*/}
                 <div className="row row-cols-1 row-cols-md-5 g-4">
-                    {courses.map((course: any) => (
+                    {visibleCourses.map((course: any) => (
 
                         <div className="wd-dashboard-course col" style={{width: "300px"}}>
                             <div className="card rounded-3 overflow-hidden">
@@ -217,6 +229,7 @@ export default function Dashboard({ enrolling, setEnrolling }
                                                 <button onClick={(event) => {
                                                     event.preventDefault();
                                                     updateEnrollment(course._id, !course.enrolled);
+
                                                 }}
                                                     className={`btn ${course.enrolled ? "btn-danger" : "btn-success"} float-end`}>
                                                     {course.enrolled ? "Unenroll" : "Enroll"}
