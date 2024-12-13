@@ -11,7 +11,6 @@ const courseSlice = createSlice({
     reducers: {
         addCourse: (state, {payload: a}) => {
             const newCourse: any = {
-                _id: new Date().getTime().toString(),
                 name: a.name,
                 number: a.number,
                 startDate: a.startDate,
