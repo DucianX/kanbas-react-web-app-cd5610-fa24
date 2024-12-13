@@ -22,13 +22,10 @@ export default function Assignments() {
 
     const assignments = useSelector((state: any) => state.assignmentReducer).assignments;
 
-    // 过滤出当前课程的作业
-    const courseAssignments = assignments;
-
     const dispatch = useDispatch();
     const fetchAssignments = async () => {
         const assignments = await assignmentClient.findAssignmentsForCourse(cid as string);
-        dispatch(setAssignments(assignments));
+        dispatch(setAssignments(assignments)); // 确保 assignments 是数组
     }
     useEffect(() => {
         fetchAssignments();
@@ -78,7 +75,7 @@ export default function Assignments() {
 
             {/* 动态生成的作业列表 */}
             <ul id="wd-assignment-list" className="list-group mt-3">
-                {courseAssignments.map((assignment: any) => (
+                {assignments.map((assignment: any) => (
                     <li
                         key={assignment._id}
                         className="list-group-item d-flex justify-content-between align-items-center"

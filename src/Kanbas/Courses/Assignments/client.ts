@@ -4,7 +4,7 @@ const ASSIGNMENTS_API = `${REMOTE_SERVER}/api/assignments`;
 export const findAssignmentsForCourse = async (courseId: string) => {
   const response = await axios
     .get(`${ASSIGNMENTS_API}/${courseId}/assignments`);
-  return response.data;
+    return response.data // 确保返回值是数组
 };
 
 export const createAssignmentForCourse = async (courseId: string, assignment: any) => {
