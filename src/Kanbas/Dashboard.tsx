@@ -12,10 +12,12 @@ import {
 import {setEnrollments, addEnrollment, deleteEnrollment} from "./Courses/enrollmentsReducer";
 import {fetchAllCourses} from "./Courses/client";
 import {createCourse} from "./Account/client";
-export default function Dashboard() {
+export default function Dashboard({enrolling, setEnrolling }
+                                      : { enrolling: boolean; setEnrolling: (enrolling: boolean) => void;}) {
     const {courses} = useSelector((state: any) => state.coursesReducer);
     const {currentUser} = useSelector((state: any) => state.accountReducer);
-    const {enrollments} = useSelector((state: any) => state.enrollmentsReducer);
+    const {enrollments = []} = useSelector((state: any) => state.enrollmentsReducer);
+
     const fetchCourses = async () => {
         const courses = await coursesClient.fetchAllCourses();
         dispatch(setCourses(courses));
@@ -76,15 +78,24 @@ export default function Dashboard() {
         dispatch(deleteCourse(courseId));
     }
 
+    const handleEditCourse = async (course: any) => {
+        dispatch(updateCourse(course));
+        await coursesClient.updateCourse(course);
+    }
+
     return (
         <div id="wd-dashboard">
-            <h1 id="wd-dashboard-title">Dashboard</h1>
+            <h1 id="wd-dashboard-title">Dashboard <button onClick={() => setEnrolling(!enrolling)}
+                                                          className="float-end btn btn-primary">
+                {enrolling ? "My Courses" : "All Courses"}
+            </button>
+            </h1>
             <hr/>
 
             <StudentContent>
                 {/*点击切换对于当前用户全部可录入课程/已经录入课程的蓝色小按钮*/}
                 <div className="flex float-end">
-                    <button className="btn btn-primary float-end"
+                <button className="btn btn-primary float-end"
                             id="wd-add-new-course-click"
                             onClick = {() => {
                                 setFiltered(!filtered);
@@ -112,7 +123,8 @@ export default function Dashboard() {
                     </button>
 
                     <button className="btn btn-warning float-end me-2"
-                            onClick={() => dispatch(updateCourse(course))} id="wd-update-course-click">
+                            onClick={() => {dispatch(updateCourse(course));
+                                handleEditCourse(course);}} id="wd-update-course-click">
                         Update
                     </button>
 
@@ -142,6 +154,11 @@ export default function Dashboard() {
                                         <img src="/images/reactjs.jpg" width="100%" height={160}/>
                                         <div className="card-body">
                                             <h5 className="wd-dashboard-course-title card-title">
+                                                {enrolling && (
+                                                    <button className={`btn ${ course.enrolled ? "btn-danger" : "btn-success" } float-end`} >
+                                                        {course.enrolled ? "Unenroll" : "Enroll"}
+                                                    </button>
+                                                )}
                                                 {course.name}
                                             </h5>
                                             <p className="wd-dashboard-course-title card-text overflow-y-hidden"
@@ -165,6 +182,7 @@ export default function Dashboard() {
                                                 <button id="wd-edit-course-click"
                                                         onClick={(event) => {
                                                             event.preventDefault();
+
                                                             setCourse(course);
                                                         }}
                                                         className="btn btn-warning me-2 float-end">
@@ -175,7 +193,7 @@ export default function Dashboard() {
                                             {/*学生能看到的按钮*/}
                                             <StudentContent>
                                                 {/*unenroll按钮，只当enrollment里面没有的时候才出现*/}
-                                                {enrollments.some(
+                                                {enrollments.find(
                                                     (enrollment: {user: string; course: string}) =>
                                                         enrollment.user === currentUser._id &&
                                                         enrollment.course === course._id
@@ -188,7 +206,7 @@ export default function Dashboard() {
                                                 </button>}
 
                                                 {/*enroll按钮，同理*/}
-                                                {!enrollments.some(
+                                                {!enrollments.find(
                                                 (enrollment: {user: string; course: string}) =>
                                                 enrollment.user === currentUser._id &&
                                                 enrollment.course === course._id

@@ -4,6 +4,7 @@ import {BsGripVertical} from "react-icons/bs";
 import ModuleControlButtons from "./ModuleControlButtons";
 import {useParams} from "react-router";
 import * as db from "../../Database";
+
 import * as coursesClient from "../client";
 import * as modulesClient from "./client";
 import React, {useState, useEffect} from "react";
@@ -65,7 +66,7 @@ export default function Modules() {
                             <li className="wd-module list-group-item p-0 mb-5 fs-5 border-gray">
 
                                 <div className="wd-title p-3 ps-2 bg-secondary">
-                                    <BsGripVertical className="me-2 fs-3"/> {module.name}
+                                    <BsGripVertical className="me-2 fs-3"/>
                                     {!module.editing && module.name}
                                     {module.editing && (
                                         <input className="form-control w-50 d-inline-block"
